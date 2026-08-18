@@ -1,0 +1,162 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import BurntDivider from "../../components/BurntDivider.astro";
+import FallaCard from "../../components/FallaCard.astro";
+import { getCollection } from "astro:content";
+
+const fallas = (await getCollection("fallas")).sort(
+  (a, b) => b.data.año - a.data.año || a.data.falla.localeCompare(b.data.falla),
+);
+
+const anios = [...new Set(fallas.map((f) => f.data.año))].sort((a, b) => b - a);
+---
+
+<Layout
+  title="Colecciones"
+  description="Palmarés de fallas de Dani: años, lemas, secciones y premios."
+>
+  <section class="col-hero">
+    <div class="wrap">
+      <p class="eyebrow">Palmarés</p>
+      <h1>Colecciones</h1>
+      <p class="lede">
+        El registro de las fallas, ninots y piezas que ha firmado Dani a lo
+        largo de los años: edición, lema, sección y premios de cada una.
+      </p>
+      {
+        anios.length > 0 && (
+          <div class="filters" role="tablist" aria-label="Filtrar por año">
+            <button type="button" class="active" data-year="todos">
+              Todos
+            </button>
+            {anios.map((a) => (
+              <button type="button" data-year={a}>
+                {a}
+              </button>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--paper-dark)" />
+
+  <section class="section col-grid-section">
+    <div class="wrap">
+      {
+        fallas.length === 0 ? (
+          <p class="empty">Todavía no hay fichas de fallas cargadas.</p>
+        ) : (
+          <div class="col-grid" id="col-grid">
+            {fallas.map((f) => (
+              <div class="col-item" data-year={f.data.año}>
+                <a href={`/colecciones/${f.id}/`} class="col-item-link">
+                  {" "}
+                  <FallaCard
+                    falla={f.data.falla}
+                    año={f.data.año}
+                    lema={f.data.lema}
+                    seccion={f.data.seccion}
+                    casal={f.data.casal}
+                    premios={f.data.premios}
+                    foto={f.data.foto}
+                  />
+                </a>
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .col-hero {
+    background: var(--paper);
+    padding: 64px 0 40px;
+  }
+  h1 {
+    font-size: clamp(40px, 5.6vw, 60px);
+    margin: 10px 0 18px;
+  }
+  .lede {
+    font-size: 17px;
+    color: var(--wood-dark);
+    max-width: 62ch;
+    margin-bottom: 30px;
+  }
+  .filters {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .filters button {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1.5px solid var(--wood);
+    background: transparent;
+    color: var(--wood-dark);
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease;
+  }
+  .filters button.active,
+  .filters button:hover {
+    background: var(--ember);
+    border-color: var(--ember);
+    color: var(--white-smoke);
+  }
+
+  .col-grid-section {
+    background: var(--paper-dark);
+  }
+  .empty {
+    color: var(--wood-dark);
+    font-family: var(--font-mono);
+    font-size: 14px;
+  }
+  .col-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 26px;
+  }
+  .col-item-link {
+    display: block;
+    color: inherit;
+    text-decoration: none;
+  }
+  @media (max-width: 900px) {
+    .col-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+  @media (max-width: 560px) {
+    .col-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+<script>
+  const buttons =
+    document.querySelectorAll<HTMLButtonElement>(".filters button");
+  const items = document.querySelectorAll<HTMLElement>(".col-item");
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      buttons.forEach((b) => b.classList.remove("active"));
+      btn.classList.add("active");
+      const year = btn.dataset.year;
+      items.forEach((item) => {
+        const show = year === "todos" || item.dataset.year === year;
+        item.style.display = show ? "" : "none";
+      });
+    });
+  });
+</script>

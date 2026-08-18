@@ -1,0 +1,230 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import BurntDivider from "../../components/BurntDivider.astro";
+import { Image } from "astro:assets";
+import fotoDani from "../../assets/greek-dani.webp";
+
+const hitos = [
+  {
+    year: "2013",
+    text: "Primeros pasos en el casal, ayudando a montar armazones de ferralla.",
+  },
+  {
+    year: "2017",
+    text: "Primer ninot propio para una falla infantil del barrio.",
+  },
+  {
+    year: "2021",
+    text: "Primera falla grande firmada en solitario: mención de la Junta Local.",
+  },
+  {
+    year: "2024",
+    text: "Abre l\u2019Atelier del Foc para encargos particulares y de casals.",
+  },
+];
+---
+
+<Layout
+  title="Sobre Dani"
+  description="Conoce a Dani, artista fallero y fundador de l'Atelier del Foc."
+>
+  <section class="hero-page">
+    <div class="wrap hero-page-grid">
+      <div>
+        <p class="eyebrow">El artista</p>
+        <h1>Dani</h1>
+        <p class="lede">
+          Escultor y pintor fallero. Trabaja el corcho blanco, el cartón piedra
+          y la ferralla con la misma calma con la que otros trabajan el mármol,
+          sabiendo que en marzo todo eso será ceniza.
+        </p>
+      </div>
+      <Image src={fotoDani} alt="Foto de Daniel López" width="300" />
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--paper-dark)" />
+
+  <section class="section bio">
+    <div class="wrap bio-grid">
+      <div class="bio-copy">
+        <h2>La sátira como oficio</h2>
+        <p>
+          Dani empezó como ayudante de armazón en el casal del barrio, cargando
+          ferralla y aprendiendo a leer proporciones a ojo. Con los años pasó al
+          modelado en corcho blanco, después a la pintura, y terminó firmando
+          sus propios ninots.
+        </p>
+        <p>
+          Hoy dirige l'Atelier del Foc, un taller pequeño donde cada pieza se
+          piensa dos veces: una para que haga gracia, y otra para que aguante
+          todo el año hasta la cremà. Le interesa la tradición fallera tanto
+          como la escultura contemporánea, y busca ese cruce en cada encargo.
+        </p>
+        <p>
+          Fuera del taller, Dani colabora dando talleres de iniciación al
+          modelado en corcho para jóvenes falleros que, como él en su día,
+          empiezan cargando ferralla.
+        </p>
+      </div>
+      <aside class="bio-facts">
+        <p class="eyebrow">Materiales habituales</p>
+        <ul>
+          <li>Corcho blanco (poliestireno expandido)</li>
+          <li>Cartón piedra</li>
+          <li>Ferralla y madera de armazón</li>
+          <li>Pintura plástica y esmalte</li>
+          <li>Fibra de vidrio para acabados</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--wood-dark)" flip />
+
+  <section class="section timeline">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-light">Trayectoria</p>
+      <h2 class="timeline-title">Once años de banco de trabajo</h2>
+      <ol class="hitos">
+        {
+          hitos.map((h) => (
+            <li>
+              <span class="hito-year">{h.year}</span>
+              <p>{h.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--paper)" />
+
+  <section class="section cta-simple">
+    <div class="wrap cta-simple-inner">
+      <h2>¿Quieres encargarle una pieza a Dani?</h2>
+      <a class="btn btn-primary" href="/servicios/">Ver servicios y encargos</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .hero-page {
+    background: var(--paper);
+    padding: 64px 0 0;
+  }
+  .hero-page-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 48px;
+    align-items: end;
+    padding-bottom: 56px;
+  }
+  h1 {
+    font-size: clamp(44px, 6vw, 72px);
+    margin: 12px 0 18px;
+  }
+  .lede {
+    font-size: 18px;
+    color: var(--wood-dark);
+    max-width: 48ch;
+  }
+
+  .bio {
+    background: var(--paper-dark);
+  }
+  .bio-grid {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 56px;
+  }
+  .bio-copy h2 {
+    font-size: clamp(24px, 3vw, 30px);
+    margin-bottom: 18px;
+  }
+  .bio-copy p {
+    color: var(--wood-dark);
+    margin-bottom: 18px;
+    max-width: 60ch;
+  }
+  .bio-facts {
+    border-left: 2px solid var(--ember);
+    padding-left: 22px;
+  }
+  .bio-facts ul {
+    list-style: none;
+    margin: 12px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .bio-facts li {
+    font-size: 14.5px;
+    color: var(--wood-dark);
+  }
+
+  .timeline {
+    background: var(--wood-dark);
+  }
+  .eyebrow-light {
+    color: var(--ember-light);
+  }
+  .timeline-title {
+    color: var(--white-smoke);
+    font-size: clamp(26px, 3.2vw, 34px);
+    margin: 10px 0 40px;
+  }
+  .hitos {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .hitos li {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 24px;
+    padding: 20px 0;
+    border-top: 1px solid rgba(237, 228, 211, 0.14);
+  }
+  .hitos li:last-child {
+    border-bottom: 1px solid rgba(237, 228, 211, 0.14);
+  }
+  .hito-year {
+    font-family: var(--font-mono);
+    color: var(--ember-light);
+    font-size: 15px;
+  }
+  .hitos p {
+    color: var(--paper-dark);
+    max-width: 56ch;
+  }
+
+  .cta-simple {
+    background: var(--paper);
+    text-align: center;
+  }
+  .cta-simple-inner h2 {
+    font-size: clamp(24px, 3vw, 30px);
+    margin-bottom: 22px;
+  }
+
+  @media (max-width: 860px) {
+    .hero-page-grid,
+    .bio-grid {
+      grid-template-columns: 1fr;
+    }
+    .bio-facts {
+      border-left: none;
+      border-top: 2px solid var(--ember);
+      padding-left: 0;
+      padding-top: 18px;
+    }
+    .hitos li {
+      grid-template-columns: 70px 1fr;
+    }
+  }
+</style>

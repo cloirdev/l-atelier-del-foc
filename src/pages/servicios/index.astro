@@ -1,0 +1,147 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import BurntDivider from '../../components/BurntDivider.astro';
+
+const servicios = [
+  {
+    n: '01',
+    title: 'Falla grande',
+    text: 'Diseño y ejecución completa: boceto, escultura en corcho blanco y ferralla, pintura y montaje en calle o casal.',
+    tag: 'A medida · varias semanas',
+  },
+  {
+    n: '02',
+    title: 'Falla infantil',
+    text: 'Piezas pensadas para casals infantiles: escala reducida, colores vivos y una historia que se pueda explicar a los peques.',
+    tag: 'A medida · semanas',
+  },
+  {
+    n: '03',
+    title: 'Ninot individual',
+    text: 'Figuras sueltas para exposición, indulto o regalo. Ideal para encargos particulares o coleccionismo fallero.',
+    tag: 'Desde una figura',
+  },
+  {
+    n: '04',
+    title: 'Restauración y repintado',
+    text: 'Recuperación de ninots antiguos o piezas dañadas: refuerzo de armazón, resina y repintado de acabados.',
+    tag: 'Según estado de la pieza',
+  },
+  {
+    n: '05',
+    title: 'Talleres de iniciación',
+    text: 'Sesiones para casals y grupos jóvenes: fundamentos de modelado en corcho blanco y ferralla.',
+    tag: 'Grupos reducidos',
+  },
+];
+
+const proceso = [
+  { n: '01', label: 'Consulta', text: 'Cuéntale a Dani la idea, la escala y el plazo. Primera valoración sin compromiso.' },
+  { n: '02', label: 'Boceto', text: 'Propuesta en papel: diseño, proporción y presupuesto cerrado antes de empezar.' },
+  { n: '03', label: 'Taller', text: 'Escultura y pintura en l\u2019Atelier del Foc, con avances fotográficos del proceso.' },
+  { n: '04', label: 'Entrega', text: 'Montaje en su ubicación final, lista para la falla, el casal o la exposición.' },
+];
+---
+<Layout title="Servicios" description="Encargos de fallas, ninots y restauración en l'Atelier del Foc, taller de Dani.">
+  <section class="serv-hero">
+    <div class="wrap">
+      <p class="eyebrow">Encargos</p>
+      <h1>Servicios del taller</h1>
+      <p class="lede">
+        Cada encargo se trata como una pieza única: escala, presupuesto y plazo se acuerdan
+        antes de tocar el corcho. Estas son las líneas de trabajo habituales de l'Atelier del Foc.
+      </p>
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--paper-dark)" />
+
+  <section class="section serv-list">
+    <div class="wrap">
+      <ul class="services">
+        {servicios.map(s => (
+          <li>
+            <span class="s-n">{s.n}</span>
+            <div class="s-body">
+              <div class="s-head">
+                <h2>{s.title}</h2>
+                <span class="tag">{s.tag}</span>
+              </div>
+              <p>{s.text}</p>
+            </div>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--wood-dark)" flip />
+
+  <section class="section serv-process">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-light">Cómo funciona un encargo</p>
+      <h2 class="proc-title">De la primera conversación a la entrega</h2>
+      <ol class="steps">
+        {proceso.map(p => (
+          <li class="step">
+            <span class="step-n">{p.n}</span>
+            <h3>{p.label}</h3>
+            <p>{p.text}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--paper)" />
+
+  <section class="section cta-simple">
+    <div class="wrap cta-simple-inner">
+      <h2>Cuéntale a Dani tu idea</h2>
+      <p>Sin compromiso: una primera conversación para valorar escala, plazo y presupuesto.</p>
+      <a class="btn btn-primary" href="/contacto/">Solicitar presupuesto</a>
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .serv-hero { background: var(--paper); padding: 64px 0 52px; }
+  h1 { font-size: clamp(38px, 5vw, 56px); margin: 10px 0 18px; }
+  .lede { font-size: 17px; color: var(--wood-dark); max-width: 62ch; }
+
+  .serv-list { background: var(--paper-dark); }
+  .services { list-style: none; margin: 0; padding: 0; }
+  .services li {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 24px;
+    padding: 30px 0;
+    border-top: 1px solid rgba(74,52,35,0.16);
+  }
+  .services li:last-child { border-bottom: 1px solid rgba(74,52,35,0.16); }
+  .s-n { font-family: var(--font-mono); color: var(--ember); font-size: 15px; padding-top: 4px; }
+  .s-head { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; margin-bottom: 8px; }
+  .s-head h2 { font-size: 22px; }
+  .s-body p { color: var(--wood-dark); max-width: 62ch; }
+
+  .serv-process { background: var(--wood-dark); }
+  .eyebrow-light { color: var(--ember-light); }
+  .proc-title { color: var(--white-smoke); font-size: clamp(24px, 3vw, 32px); margin: 10px 0 40px; max-width: 24ch; }
+  .steps { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 26px; }
+  .step { border-top: 2px solid var(--ember); padding-top: 16px; }
+  .step-n { display: block; font-family: var(--font-mono); font-size: 13px; color: var(--ember-light); margin-bottom: 10px; }
+  .step h3 { color: var(--white-smoke); font-size: 19px; margin-bottom: 8px; }
+  .step p { color: var(--cork); font-size: 14px; }
+
+  .cta-simple { background: var(--paper); text-align: center; }
+  .cta-simple-inner h2 { font-size: clamp(24px, 3vw, 30px); margin-bottom: 12px; }
+  .cta-simple-inner p { color: var(--wood-dark); margin-bottom: 26px; }
+
+  @media (max-width: 760px) {
+    .steps { grid-template-columns: 1fr 1fr; }
+    .services li { grid-template-columns: 50px 1fr; }
+  }
+  @media (max-width: 480px) {
+    .steps { grid-template-columns: 1fr; }
+  }
+</style>

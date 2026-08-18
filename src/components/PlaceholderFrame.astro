@@ -1,0 +1,85 @@
+---
+interface Props {
+  label: string;
+  caption?: string;
+  ratio?: string; // aspect-ratio css value, e.g. "4/5"
+}
+const { label, caption, ratio = '4/5' } = Astro.props;
+---
+<figure class="frame">
+  <div class="photo" style={`aspect-ratio: ${ratio};`}>
+    <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+      <circle cx="50" cy="30" r="14" fill="none" stroke="var(--wood)" stroke-width="2.2" />
+      <path d="M28 88 C28 58 34 46 50 46 C66 46 72 58 72 88" fill="none" stroke="var(--wood)" stroke-width="2.2" stroke-linecap="round" />
+      <path d="M38 62 L34 78 M62 62 L66 78" fill="none" stroke="var(--wood)" stroke-width="2" stroke-linecap="round" />
+    </svg>
+    <span class="ph-label">Foto pendiente</span>
+  </div>
+  <figcaption>
+    <span class="cap-title">{label}</span>
+    {caption && <span class="cap-sub">{caption}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .frame {
+    margin: 0;
+    background: var(--white-smoke);
+    padding: 10px 10px 16px;
+    border-radius: 2px;
+    box-shadow: 0 10px 24px -14px rgba(43,36,32,0.45);
+    transform: rotate(var(--tilt, -0.6deg));
+  }
+  .photo {
+    position: relative;
+    width: 100%;
+    background:
+      radial-gradient(circle at 88% 6%, rgba(193,68,14,0.22), transparent 40%),
+      linear-gradient(155deg, var(--paper-dark), var(--cork) 130%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    clip-path: polygon(
+      0 0, 86% 0, 100% 8%, 100% 100%, 0 100%
+    );
+  }
+  .photo::after {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 26%;
+    height: 14%;
+    background: linear-gradient(215deg, var(--ember-light), transparent 70%);
+    opacity: 0.55;
+    filter: blur(1px);
+  }
+  .mark { width: 34%; opacity: 0.55; }
+  .ph-label {
+    position: absolute;
+    bottom: 8px;
+    left: 10px;
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--wood-dark);
+    opacity: 0.6;
+  }
+  figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-top: 12px;
+  }
+  .cap-title {
+    font-family: var(--font-display);
+    font-size: 16px;
+    color: var(--soot);
+  }
+  .cap-sub {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--wood);
+  }
+</style>

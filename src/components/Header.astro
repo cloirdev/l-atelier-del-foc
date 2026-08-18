@@ -1,0 +1,148 @@
+---
+const { pathname } = Astro.url;
+const links = [
+  { href: "/", label: "Inicio" },
+  { href: "/sobre-mi/", label: "Sobre Mí" },
+  { href: "/galeria/", label: "Galería" },
+  { href: "/colecciones/", label: "Colecciones" },
+  { href: "/servicios/", label: "Servicios" },
+  { href: "/blog/", label: "Bitácora" },
+  { href: "/contacto/", label: "Contacto" },
+];
+
+import { Image } from "astro:assets";
+import logo from "../assets/logo.svg";
+---
+
+<header class="site-header">
+  <div class="wrap bar">
+    <a href="/" class="wordmark" aria-label="L'Atelier del Foc, inicio">
+      <Image src={logo} alt="Logo de L'Atelier del Foc" width="50">
+        <span>
+          <strong>L'Atelier</strong> del Foc
+        </span>
+      </Image>
+      <input type="checkbox" id="nav-toggle" class="nav-toggle" />
+      <label for="nav-toggle" class="nav-burger" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </label>
+      <nav class="site-nav" aria-label="Navegación principal">
+        {
+          links.map((l) => (
+            <a
+              href={l.href}
+              class:list={[
+                {
+                  active:
+                    pathname === l.href ||
+                    (l.href !== "/" && pathname.startsWith(l.href)),
+                },
+              ]}
+            >
+              {l.label}
+            </a>
+          ))
+        }
+      </nav>
+    </a>
+  </div>
+
+  <style>
+    .site-header {
+      background: var(--wood-dark);
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      border-bottom: 3px solid var(--ember);
+    }
+    .bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 14px;
+      padding-bottom: 14px;
+    }
+    .wordmark {
+      display: flex;
+      align-items: center;
+      gap: 9px;
+      font-family: var(--font-display);
+      font-size: 19px;
+      color: var(--white-smoke);
+      letter-spacing: 0.01em;
+    }
+    .wordmark strong {
+      font-weight: 700;
+    }
+    .mark {
+      width: 24px;
+      height: 24px;
+      flex: none;
+    }
+
+    .site-nav {
+      display: flex;
+      gap: 28px;
+    }
+    .site-nav a {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--paper-dark);
+      padding-bottom: 4px;
+      border-bottom: 1.5px solid transparent;
+      transition:
+        color 0.2s ease,
+        border-color 0.2s ease;
+    }
+    .site-nav a:hover,
+    .site-nav a.active {
+      color: var(--ember-light);
+      border-color: var(--ember-light);
+    }
+
+    .nav-toggle {
+      display: none;
+    }
+    .nav-burger {
+      display: none;
+    }
+
+    @media (max-width: 760px) {
+      .nav-burger {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        cursor: pointer;
+        padding: 6px;
+      }
+      .nav-burger span {
+        width: 22px;
+        height: 2px;
+        background: var(--paper-dark);
+        display: block;
+      }
+      .site-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--wood-dark);
+        flex-direction: column;
+        gap: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.25s ease;
+        border-bottom: 3px solid var(--ember);
+      }
+      .site-nav a {
+        padding: 14px 28px;
+        border-bottom: 1px solid rgba(237, 228, 211, 0.1);
+      }
+      .nav-toggle:checked ~ .site-nav {
+        max-height: 400px;
+      }
+    }
+  </style>
+</header>

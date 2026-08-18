@@ -1,0 +1,88 @@
+---
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="col">
+      <p class="foot-word">L'Atelier del Foc</p>
+      <p class="foot-desc">
+        Taller de arte fallero de Dani. Del boceto a la cremà, cada pieza se
+        construye para arder con sentido.
+      </p>
+    </div>
+    <div class="col">
+      <p class="eyebrow">Taller</p>
+      <a href="/el-artista/">Sobre Dani</a>
+      <a href="/galeria/">Galería</a>
+      <a href="/servicios/">Servicios</a>
+    </div>
+    <div class="col">
+      <p class="eyebrow">Contacto</p>
+      <a href="mailto:hola@atelierdelfoc.com">hola@atelierdelfoc.com</a>
+      <a href="/contacto/">Escribir un mensaje</a>
+      <a href="/blog/">Bitácora del taller</a>
+    </div>
+  </div>
+  <div class="wrap bottom">
+    <p>© {year} L'Atelier del Foc — Dani. Hecho a mano, como todo lo demás.</p>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--wood-dark);
+    color: var(--paper-dark);
+    padding-top: 56px;
+  }
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1fr;
+    gap: 40px;
+    padding-bottom: 40px;
+  }
+  .foot-word {
+    font-family: var(--font-display);
+    font-size: 22px;
+    color: var(--white-smoke);
+    margin-bottom: 10px;
+  }
+  .foot-desc {
+    font-size: 14.5px;
+    color: var(--cork);
+    max-width: 34ch;
+  }
+  .col {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .col .eyebrow {
+    margin-bottom: 2px;
+  }
+  .col a {
+    font-size: 14px;
+    color: var(--paper-dark);
+    width: fit-content;
+    border-bottom: 1px solid transparent;
+  }
+  .col a:hover {
+    color: var(--ember-light);
+    border-color: var(--ember-light);
+  }
+  .bottom {
+    border-top: 1px solid rgba(237, 228, 211, 0.12);
+    padding: 18px 28px;
+  }
+  .bottom p {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    color: var(--cork);
+  }
+  @media (max-width: 680px) {
+    .footer-grid {
+      grid-template-columns: 1fr;
+      gap: 28px;
+    }
+  }
+</style>

@@ -1,0 +1,50 @@
+---
+interface Props {
+  fill?: string;      // color de la sección que viene DESPUÉS del divisor
+  flip?: boolean;     // invierte el borde (para alternar el ritmo visual)
+}
+const { fill = 'var(--paper-dark)', flip = false } = Astro.props;
+const uid = Math.random().toString(36).slice(2, 8);
+---
+<div class="burnt-divider" class:list={[{ flip }]} aria-hidden="true">
+  <svg viewBox="0 0 1200 70" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id={`ember-${uid}`} x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="var(--ember)" stop-opacity="0" />
+        <stop offset="20%" stop-color="var(--ember)" stop-opacity="0.55" />
+        <stop offset="50%" stop-color="var(--ember-light)" stop-opacity="0.85" />
+        <stop offset="80%" stop-color="var(--ember)" stop-opacity="0.55" />
+        <stop offset="100%" stop-color="var(--ember)" stop-opacity="0" />
+      </linearGradient>
+    </defs>
+    <path
+      d="M0,70 L0,31.1 Q23.0,22.6 46,23.8 Q69.0,41.4 92,44.8 Q115.0,38.1 138,20.5 L153.5,20.5 L161.5,57.7 L169.5,40.0 L185,40.0 Q208.0,35.0 231,32.9 Q254.0,26.5 277,19.9 Q300.0,36.3 323,38.8 L338.0,38.8 L346.0,29.8 L354.0,19.1 L369,19.1 Q392.0,32.1 415,35.7 Q438.5,28.3 462,20.4 Q485.0,15.9 508,21.3 L523.0,21.3 L531.0,49.1 L539.0,35.3 L554,35.3 Q577.0,45.5 600,52.2 Q623.0,46.6 646,22.7 Q669.0,22.5 692,26.9 L707.0,26.9 L715.0,63.4 L723.0,43.9 L738,43.9 Q761.5,49.7 785,57.3 Q808.0,53.3 831,41.7 Q854.0,35.1 877,34.2 L892.0,34.2 L900.0,70 L908.0,58.5 L923,58.5 Q946.0,49.5 969,19.5 Q992.0,45.8 1015,53.6 Q1038.5,49.3 1062,29.7 L1077.0,29.7 L1085.0,45.4 L1093.0,23.6 L1108,23.6 Q1131.0,20.7 1154,22.4 Q1177.0,25.2 1200,30.5 L1200,70 Z"
+      fill={fill}
+    />
+    <path
+      d="M0,31.1 Q23.0,22.6 46,23.8 Q69.0,41.4 92,44.8 Q115.0,38.1 138,20.5 L153.5,20.5 L161.5,57.7 L169.5,40.0 L185,40.0 Q208.0,35.0 231,32.9 Q254.0,26.5 277,19.9 Q300.0,36.3 323,38.8 L338.0,38.8 L346.0,29.8 L354.0,19.1 L369,19.1 Q392.0,32.1 415,35.7 Q438.5,28.3 462,20.4 Q485.0,15.9 508,21.3 L523.0,21.3 L531.0,49.1 L539.0,35.3 L554,35.3 Q577.0,45.5 600,52.2 Q623.0,46.6 646,22.7 Q669.0,22.5 692,26.9 L707.0,26.9 L715.0,63.4 L723.0,43.9 L738,43.9 Q761.5,49.7 785,57.3 Q808.0,53.3 831,41.7 Q854.0,35.1 877,34.2 L892.0,34.2 L900.0,70 L908.0,58.5 L923,58.5 Q946.0,49.5 969,19.5 Q992.0,45.8 1015,53.6 Q1038.5,49.3 1062,29.7 L1077.0,29.7 L1085.0,45.4 L1093.0,23.6 L1108,23.6 Q1131.0,20.7 1154,22.4 Q1177.0,25.2 1200,30.5"
+      fill="none"
+      stroke={`url(#ember-${uid})`}
+      stroke-width="2.5"
+    />
+  </svg>
+</div>
+
+<style>
+  .burnt-divider {
+    width: 100%;
+    line-height: 0;
+    transform: translateY(1px);
+  }
+  .burnt-divider.flip {
+    transform: scaleX(-1) translateY(1px);
+  }
+  .burnt-divider svg {
+    display: block;
+    width: 100%;
+    height: 48px;
+  }
+  @media (max-width: 640px) {
+    .burnt-divider svg { height: 32px; }
+  }
+</style>
