@@ -3,16 +3,30 @@ import Layout from "../../../layouts/Layout.astro";
 import BurntDivider from "../../../components/BurntDivider.astro";
 import { getCollection, render } from "astro:content";
 import { Image } from "astro:assets";
-import { languages } from "../../../i18n/ui";
+import { languages, defaultLang } from "../../../i18n/ui";
 import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
 
 export async function getStaticPaths() {
   const fallas = await getCollection("fallas");
+  const langCodes = Object.keys(languages);
+  const langPattern = langCodes.join("|");
+  const langRegex = new RegExp(`^(.*)_(${langCodes.join("|")})$`);
 
-  return Object.keys(languages).flatMap((lang) =>
-    fallas.map((falla) => ({
-      params: { lang, slug: falla.id },
-      props: { falla },
+  const bySlug = new Map<string, Record<string, (typeof fallas)[number]>>();
+
+  for (const entry of fallas) {
+    const match = entry.id.match(langRegex);
+    const baseSlug = match ? match[1] : entry.id;
+    const entryLang = match ? match[2] : defaultLang;
+
+    if (!bySlug.has(baseSlug)) bySlug.set(baseSlug, {});
+    bySlug.get(baseSlug)![entryLang] = entry;
+  }
+
+  return langCodes.flatMap((lang) =>
+    Array.from(bySlug.entries()).map(([slug, versions]) => ({
+      params: { lang, slug },
+      props: { falla: versions[lang] ?? versions[defaultLang] },
     })),
   );
 }

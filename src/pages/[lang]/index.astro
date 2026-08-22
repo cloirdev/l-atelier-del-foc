@@ -3,7 +3,7 @@ import Layout from "../../layouts/Layout.astro";
 import BurntDivider from "../../components/BurntDivider.astro";
 import PlaceholderFrame from "../../components/PlaceholderFrame.astro";
 import { Image } from "astro:assets";
-import heroImage from "../../assets/hero-image.png";
+import heroImage from "../../assets/hero-image.webp";
 import { languages } from "../../i18n/ui";
 import { useTranslations } from "../../i18n/utils";
 
@@ -15,16 +15,41 @@ const { lang } = Astro.params as { lang: keyof typeof languages };
 const t = useTranslations(lang);
 
 const steps = [
-  { n: "01", label: t("home.process.step1.label"), text: t("home.process.step1.text") },
-  { n: "02", label: t("home.process.step2.label"), text: t("home.process.step2.text") },
-  { n: "03", label: t("home.process.step3.label"), text: t("home.process.step3.text") },
-  { n: "04", label: t("home.process.step4.label"), text: t("home.process.step4.text") },
+  {
+    n: "01",
+    label: t("home.process.step1.label"),
+    text: t("home.process.step1.text"),
+  },
+  {
+    n: "02",
+    label: t("home.process.step2.label"),
+    text: t("home.process.step2.text"),
+  },
+  {
+    n: "03",
+    label: t("home.process.step3.label"),
+    text: t("home.process.step3.text"),
+  },
+  {
+    n: "04",
+    label: t("home.process.step4.label"),
+    text: t("home.process.step4.text"),
+  },
 ];
 
 const piezas = [
-  { label: t("home.gallery.piece1.label"), caption: t("home.gallery.piece1.caption") },
-  { label: t("home.gallery.piece2.label"), caption: t("home.gallery.piece2.caption") },
-  { label: t("home.gallery.piece3.label"), caption: t("home.gallery.piece3.caption") },
+  {
+    label: t("home.gallery.piece1.label"),
+    caption: t("home.gallery.piece1.caption"),
+  },
+  {
+    label: t("home.gallery.piece2.label"),
+    caption: t("home.gallery.piece2.caption"),
+  },
+  {
+    label: t("home.gallery.piece3.label"),
+    caption: t("home.gallery.piece3.caption"),
+  },
 ];
 ---
 
@@ -36,12 +61,17 @@ const piezas = [
         <h1>
           {t("home.hero.h1.l1")}<br />
           {t("home.hero.h1.l2")}<br />
-          {t("home.hero.h1.l3")} <span class="ember-word">{t("home.hero.h1.ember")}</span>.
+          {t("home.hero.h1.l3")}
+          <span class="ember-word">{t("home.hero.h1.ember")}</span>.
         </h1>
         <p class="hero-sub">{t("home.hero.sub")}</p>
         <div class="hero-cta">
-          <a class="btn btn-primary" href={`/${lang}/servicios/`}>{t("home.hero.cta.encargar")}</a>
-          <a class="btn btn-ghost" href={`/${lang}/galeria/`}>{t("home.hero.cta.galeria")}</a>
+          <a class="btn btn-primary" href={`/${lang}/servicios/`}
+            >{t("home.hero.cta.encargar")}</a
+          >
+          <a class="btn btn-ghost" href={`/${lang}/galeria/`}
+            >{t("home.hero.cta.galeria")}</a
+          >
         </div>
       </div>
       <div class="hero-visual">
@@ -52,6 +82,8 @@ const piezas = [
             width={480}
             height={560}
             class="hero-photo"
+            loading="eager"
+            fetchpriority="high"
           />
         </div>
       </div>
@@ -71,7 +103,9 @@ const piezas = [
         <p class="eyebrow">{t("home.about.eyebrow")}</p>
         <h2>{t("home.about.title")}</h2>
         <p>{t("home.about.text")}</p>
-        <a class="btn btn-ghost" href={`/${lang}/el-artista/`}>{t("home.about.cta")}</a>
+        <a class="btn btn-ghost" href={`/${lang}/el-artista/`}
+          >{t("home.about.cta")}</a
+        >
       </div>
     </div>
   </section>
@@ -105,7 +139,9 @@ const piezas = [
           <p class="eyebrow">{t("home.gallery.eyebrow")}</p>
           <h2>{t("home.gallery.title")}</h2>
         </div>
-        <a class="btn btn-ghost" href={`/${lang}/galeria/`}>{t("home.gallery.cta")}</a>
+        <a class="btn btn-ghost" href={`/${lang}/galeria/`}
+          >{t("home.gallery.cta")}</a
+        >
       </div>
       <div class="pieces-grid">
         {
@@ -123,7 +159,9 @@ const piezas = [
     <div class="wrap cta-inner">
       <h2>{t("home.cta.title")}</h2>
       <p>{t("home.cta.text")}</p>
-      <a class="btn btn-primary" href={`/${lang}/contacto/`}>{t("home.cta.button")}</a>
+      <a class="btn btn-primary" href={`/${lang}/contacto/`}
+        >{t("home.cta.button")}</a
+      >
     </div>
   </section>
 </Layout>

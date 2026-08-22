@@ -3,7 +3,7 @@ import Layout from "../../../layouts/Layout.astro";
 import BurntDivider from "../../../components/BurntDivider.astro";
 import FallaCard from "../../../components/FallaCard.astro";
 import { getCollection } from "astro:content";
-import { languages } from "../../../i18n/ui";
+import { languages, defaultLang } from "../../../i18n/ui";
 import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
 
 export function getStaticPaths() {
@@ -13,13 +13,40 @@ export function getStaticPaths() {
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const fallas = (await getCollection("fallas")).sort(
-  (a, b) => b.data.año - a.data.año || a.data.falla.localeCompare(b.data.falla),
+const allFallas = await getCollection("fallas");
+const langCodes = Object.keys(languages); // ["va", "es"]
+const langRegex = new RegExp(`^(.*)_(${langCodes.join("|")})$`);
+
+const bySlug = new Map<string, Record<string, (typeof allFallas)[number]>>();
+for (const entry of allFallas) {
+  const match = entry.id.match(langRegex);
+  const baseSlug = match ? match[1] : entry.id;
+  const entryLang = match ? match[2] : defaultLang;
+
+  if (!bySlug.has(baseSlug)) bySlug.set(baseSlug, {});
+  bySlug.get(baseSlug)![entryLang] = entry;
+}
+
+const fallas = Array.from(bySlug.entries())
+  .map(([slug, versions]) => ({
+    slug,
+    entry: versions[lang] ?? versions[defaultLang],
+  }))
+  .sort(
+    (a, b) =>
+      b.entry.data.año - a.entry.data.año ||
+      a.entry.data.falla.localeCompare(b.entry.data.falla),
+  );
+
+const anios = [...new Set(fallas.map((f) => f.entry.data.año))].sort(
+  (a, b) => b - a,
 );
-const anios = [...new Set(fallas.map((f) => f.data.año))].sort((a, b) => b - a);
 ---
 
-<Layout title={t("col.title")} description="Colección de fallas de Dani a lo largo de los años.">
+<Layout
+  title={t("col.title")}
+  description="Colección de fallas de Dani a lo largo de los años."
+>
   <section class="col-hero">
     <div class="wrap">
       <h1>{t("col.title")}</h1>
@@ -27,8 +54,14 @@ const anios = [...new Set(fallas.map((f) => f.data.año))].sort((a, b) => b - a)
       {
         anios.length > 0 && (
           <div class="filters" role="tablist" aria-label="Filtrar por año">
-            <button type="button" class="active" data-year="todos">{t("col.filtro.todos")}</button>
-            {anios.map((a) => <button type="button" data-year={a}>{a}</button>)}
+            <button type="button" class="active" data-year="todos">
+              {t("col.filtro.todos")}
+            </button>
+            {anios.map((a) => (
+              <button type="button" data-year={a}>
+                {a}
+              </button>
+            ))}
           </div>
         )
       }
@@ -44,9 +77,9 @@ const anios = [...new Set(fallas.map((f) => f.data.año))].sort((a, b) => b - a)
           <p class="empty">{t("col.empty")}</p>
         ) : (
           <div class="col-grid" id="col-grid">
-            {fallas.map((f) => (
+            {fallas.map(({ slug, entry: f }) => (
               <div class="col-item" data-year={f.data.año}>
-                <a href={`/${lang}/colecciones/${f.id}/`} class="col-item-link">
+                <a href={`/${lang}/colecciones/${slug}/`} class="col-item-link">
                   <FallaCard
                     falla={f.data.falla}
                     año={f.data.año}
@@ -138,7 +171,8 @@ const anios = [...new Set(fallas.map((f) => f.data.año))].sort((a, b) => b - a)
 </style>
 
 <script>
-  const buttons = document.querySelectorAll<HTMLButtonElement>(".filters button");
+  const buttons =
+    document.querySelectorAll<HTMLButtonElement>(".filters button");
   const items = document.querySelectorAll<HTMLElement>(".col-item");
   buttons.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -152,5 +186,3 @@ const anios = [...new Set(fallas.map((f) => f.data.año))].sort((a, b) => b - a)
     });
   });
 </script>
-
-

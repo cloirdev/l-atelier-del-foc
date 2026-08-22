@@ -146,30 +146,25 @@ export const ui = {
     "serv.lede":
       "Cada encàrrec es tracta com una peça única: escala, pressupost i termini s'acorden abans de tocar el suro. Aquestes són les línies de treball habituals de l'Atelier del Foc.",
 
-    "serv.item.1.title": "Falla gran",
+    "serv.item.1.title": "Falla infantil",
     "serv.item.1.text":
-      "Disseny i execució completa: esbós, escultura en suro blanc i ferralla, pintura i muntatge al carrer o casal.",
-    "serv.item.1.tag": "A mida · diverses setmanes",
-
-    "serv.item.2.title": "Falla infantil",
-    "serv.item.2.text":
       "Peces pensades per a casals infantils: escala reduïda, colors vius i una història que es puga explicar als xiquets.",
-    "serv.item.2.tag": "A mida · setmanes",
+    "serv.item.1.tag": "A mida · setmanes",
 
-    "serv.item.3.title": "Ninot individual",
-    "serv.item.3.text":
+    "serv.item.2.title": "Ninot individual",
+    "serv.item.2.text":
       "Figures soltes per a exposició, indult o regal. Ideal per a encàrrecs particulars o col·leccionisme faller.",
-    "serv.item.3.tag": "Des d'una figura",
+    "serv.item.2.tag": "Des d'una figura",
+
+    "serv.item.3.title": "Falla gran",
+    "serv.item.3.text":
+      "Disseny i execució completa: esbós, escultura en suro blanc i ferralla, pintura i muntatge al carrer o casal.",
+    "serv.item.3.tag": "A mida · diverses setmanes",
 
     "serv.item.4.title": "Restauració i repintat",
     "serv.item.4.text":
       "Recuperació de ninots antics o peces danyades: reforç d'armadura, resina i repintat d'acabats.",
     "serv.item.4.tag": "Segons l'estat de la peça",
-
-    "serv.item.5.title": "Tallers d'iniciació",
-    "serv.item.5.text":
-      "Sessions per a casals i grups joves: fonaments de modelatge en suro blanc i ferralla.",
-    "serv.item.5.tag": "Grups reduïts",
 
     "serv.proc.eyebrow": "Com funciona un encàrrec",
     "serv.proc.title": "De la primera conversa a l'entrega",
@@ -336,30 +331,25 @@ export const ui = {
     "serv.lede":
       "Cada encargo se trata como una pieza única: escala, presupuesto y plazo se acuerdan antes de tocar el corcho. Estas son las líneas de trabajo habituales de l'Atelier del Foc.",
 
-    "serv.item.1.title": "Falla grande",
+    "serv.item.1.title": "Falla infantil",
     "serv.item.1.text":
-      "Diseño y ejecución completa: boceto, escultura en corcho blanco y ferralla, pintura y montaje en calle o casal.",
-    "serv.item.1.tag": "A medida · varias semanas",
-
-    "serv.item.2.title": "Falla infantil",
-    "serv.item.2.text":
       "Piezas pensadas para casals infantiles: escala reducida, colores vivos y una historia que se pueda explicar a los peques.",
-    "serv.item.2.tag": "A medida · semanas",
+    "serv.item.1.tag": "A medida · semanas",
 
-    "serv.item.3.title": "Ninot individual",
-    "serv.item.3.text":
+    "serv.item.2.title": "Ninot individual",
+    "serv.item.2.text":
       "Figuras sueltas para exposición, indulto o regalo. Ideal para encargos particulares o coleccionismo fallero.",
-    "serv.item.3.tag": "Desde una figura",
+    "serv.item.2.tag": "Desde una figura",
+
+    "serv.item.3.title": "Falla grande",
+    "serv.item.3.text":
+      "Diseño y ejecución completa: boceto, escultura en corcho blanco y ferralla, pintura y montaje en calle o casal.",
+    "serv.item.3.tag": "A medida · varias semanas",
 
     "serv.item.4.title": "Restauración y repintado",
     "serv.item.4.text":
       "Recuperación de ninots antiguos o piezas dañadas: refuerzo de armazón, resina y repintado de acabados.",
     "serv.item.4.tag": "Según estado de la pieza",
-
-    "serv.item.5.title": "Talleres de iniciación",
-    "serv.item.5.text":
-      "Sesiones para casals y grupos jóvenes: fundamentos de modelado en corcho blanco y ferralla.",
-    "serv.item.5.tag": "Grupos reducidos",
 
     "serv.proc.eyebrow": "Cómo funciona un encargo",
     "serv.proc.title": "De la primera conversación a la entrega",

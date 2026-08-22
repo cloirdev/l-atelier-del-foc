@@ -1,5 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap");
-
 :root {
   /* Paleta: L'Atelier del Foc — blanco/negro + colores de las mascotas (batido y foc) */
   --white: #ffffff;
@@ -20,9 +18,9 @@
   --cork: var(--sky);
   --white-smoke: var(--white);
 
-  --font-display: "Archivo", sans-serif;
-  --font-body: "Archivo", sans-serif;
-  --font-mono: "Space Mono", monospace;
+  --font-display: "Roboto", sans-serif;
+  --font-body: "Roboto", sans-serif;
+  --font-mono: "Roboto", monospace;
 
   --max-width: 1120px;
   --radius-sm: 3px;

@@ -1,5 +1,6 @@
 ---
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
+import Logo from "../assets/logo.svg";
 
 const currentLang = getLangFromUrl(Astro.url);
 const t = useTranslations(currentLang);
@@ -10,6 +11,7 @@ const year = new Date().getFullYear();
 <footer class="site-footer">
   <div class="wrap footer-grid">
     <div class="col">
+      <Logo width={"50px"} />
       <p class="foot-word">L'Atelier del Foc</p>
       <p class="foot-desc">
         {t("footer.descripcion")}
@@ -81,6 +83,7 @@ const year = new Date().getFullYear();
     font-size: 11.5px;
     color: var(--cork);
   }
+
   @media (max-width: 680px) {
     .footer-grid {
       grid-template-columns: 1fr;

@@ -11,7 +11,7 @@ export function getStaticPaths() {
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
-const servicios = [1, 2, 3, 4, 5].map((n) => ({
+const servicios = [1, 2, 3, 4].map((n) => ({
   n: String(n).padStart(2, "0"),
   title: t(`serv.item.${n}.title` as any),
   text: t(`serv.item.${n}.text` as any),
