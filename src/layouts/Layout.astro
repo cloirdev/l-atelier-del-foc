@@ -1,25 +1,44 @@
 ---
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import '../styles/global.css';
+import { getLangFromUrl } from "../i18n/utils";
+import { languages } from "../i18n/ui";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import Lightbox from "../components/Lightbox.astro";
+import "../styles/global.css";
 
 interface Props {
   title: string;
-  description?: string;
+  description: string;
 }
-const {
-  title,
-  description = "L'Atelier del Foc — taller de arte fallero de Dani. Ninots, fallas y escultura efímera, del boceto a la cremà.",
-} = Astro.props;
+const { title, description } = Astro.props;
+
+const lang = getLangFromUrl(Astro.url);
+const canonicalPath = Astro.url.pathname;
+const pathWithoutLang = canonicalPath.replace(/^\/(va|es)/, "");
 ---
+
 <!doctype html>
-<html lang="es">
+<html lang={lang}>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="description" content={description} />
-    <title>{title} · L'Atelier del Foc</title>
+    <title>{title}</title>
+    {
+      Object.keys(languages).map((l) => (
+        <link
+          rel="alternate"
+          hreflang={l}
+          href={new URL(`/${l}${pathWithoutLang}`, Astro.site)}
+        />
+      ))
+    }
+    <link
+      rel="alternate"
+      hreflang="x-default"
+      href={new URL(`/es${pathWithoutLang}`, Astro.site)}
+    />
   </head>
   <body>
     <a href="#main" class="visually-hidden">Saltar al contenido</a>
@@ -28,5 +47,16 @@ const {
       <slot />
     </main>
     <Footer />
+    <Lightbox />
+
+    <script is:inline>
+      (function () {
+        const saved = sessionStorage.getItem("scrollY");
+        if (saved !== null) {
+          sessionStorage.removeItem("scrollY");
+          window.scrollTo({ top: parseInt(saved, 10), behavior: "instant" });
+        }
+      })();
+    </script>
   </body>
 </html>

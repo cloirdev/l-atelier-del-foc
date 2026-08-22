@@ -1,19 +1,27 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import BurntDivider from "../../components/BurntDivider.astro";
+import Layout from "../../../layouts/Layout.astro";
+import BurntDivider from "../../../components/BurntDivider.astro";
 import { getCollection, render } from "astro:content";
 import { Image } from "astro:assets";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
 
 export async function getStaticPaths() {
   const fallas = await getCollection("fallas");
-  return fallas.map((falla) => ({
-    params: { slug: falla.id },
-    props: { falla },
-  }));
+
+  return Object.keys(languages).flatMap((lang) =>
+    fallas.map((falla) => ({
+      params: { lang, slug: falla.id },
+      props: { falla },
+    })),
+  );
 }
 
 const { falla } = Astro.props;
 const { falla: nombre, año, lema, seccion, casal, premios, foto } = falla.data;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const { Content } = await render(falla);
 ---
@@ -24,8 +32,9 @@ const { Content } = await render(falla);
 >
   <section class="ficha-hero">
     <div class="wrap">
-      <a href="/colecciones/" class="volver">
-        <span aria-hidden="true">←</span> Volver a colecciones
+      <a href={`/${lang}/colecciones/`} class="volver">
+        <span aria-hidden="true">←</span>
+        {t("falla.volver")}
       </a>
 
       <div class="ficha-encabezado">
@@ -51,19 +60,19 @@ const { Content } = await render(falla);
         {
           casal && (
             <div class="dato">
-              <dt>Casal</dt>
+              <dt>{t("falla.casal")}</dt>
               <dd>{casal}</dd>
             </div>
           )
         }
         <div class="dato">
-          <dt>Sección</dt>
+          <dt>{t("falla.seccion")}</dt>
           <dd>{seccion}</dd>
         </div>
         {
           premios.length > 0 && (
             <div class="dato dato-premios">
-              <dt>Premios</dt>
+              <dt>{t("falla.premios")}</dt>
               <dd>
                 <ul class="lista-premios">
                   {premios.map((p: string) => (

@@ -16,34 +16,34 @@ const { falla, año, lema, seccion, casal, premios, foto } = Astro.props;
 
 <article class="falla-card">
   <div class="photo">
-    {
-      foto ? (
-        <Image src={foto} alt={`${falla}, ${año}`} />
-      ) : (
-        <>
-          <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
-            <circle
-              cx="50"
-              cy="30"
-              r="14"
-              fill="none"
-              stroke="var(--wood)"
-              stroke-width="2.2"
-            />
-            <path
-              d="M28 88 C28 58 34 46 50 46 C66 46 72 58 72 88"
-              fill="none"
-              stroke="var(--wood)"
-              stroke-width="2.2"
-              stroke-linecap="round"
-            />
-          </svg>
-          <span class="ph-label">Foto pendiente</span>
-        </>
-      )
-    }
-    <span class="año">{año}</span>
-  </div>
+  {
+    foto ? (
+      <Image src={foto} alt={`${falla}, ${año}`} data-no-lightbox />
+    ) : (
+      <>
+        <svg class="mark" viewBox="0 0 100 100" aria-hidden="true">
+          <circle
+            cx="50"
+            cy="30"
+            r="14"
+            fill="none"
+            stroke="var(--wood)"
+            stroke-width="2.2"
+          />
+          <path
+            d="M28 88 C28 58 34 46 50 46 C66 46 72 58 72 88"
+            fill="none"
+            stroke="var(--wood)"
+            stroke-width="2.2"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span class="ph-label">Foto pendiente</span>
+      </>
+    )
+  }
+  <span class="año">{año}</span>
+</div>
   <div class="body">
     <p class="eyebrow">{seccion}</p>
     <h3>{falla}</h3>

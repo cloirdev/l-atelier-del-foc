@@ -1,20 +1,23 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import BurntDivider from "../../components/BurntDivider.astro";
+import Layout from "../../../layouts/Layout.astro";
+import BurntDivider from "../../../components/BurntDivider.astro";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 ---
 
-<Layout
-  title="Contacto"
-  description="Contacta con l'Atelier del Foc para encargos, presupuestos o visitas al taller."
->
+<Layout title={t("contacto.title")} description={t("contacto.desc")}>
   <section class="contact-hero">
     <div class="wrap">
-      <p class="eyebrow">Hablemos</p>
-      <h1>Contacto</h1>
-      <p class="lede">
-        ¿Tienes una idea para tu falla, un ninot en mente o quieres visitar el
-        taller? Escribe a Dani y te contesta en un par de días.
-      </p>
+      <p class="eyebrow">{t("contacto.eyebrow")}</p>
+      <h1>{t("contacto.h1")}</h1>
+      <p class="lede">{t("contacto.lede")}</p>
     </div>
   </section>
 
@@ -24,12 +27,12 @@ import BurntDivider from "../../components/BurntDivider.astro";
     <div class="wrap contact-grid">
       <form
         class="contact-form"
-        action="mailto:hola@atelierdelfoc.com"
+        action="mailto:latelierdelfoc@gmail.com"
         method="post"
         enctype="text/plain"
       >
         <div class="field">
-          <label for="nombre">Nombre</label>
+          <label for="nombre">{t("contacto.form.nombre")}</label>
           <input
             id="nombre"
             name="nombre"
@@ -39,7 +42,7 @@ import BurntDivider from "../../components/BurntDivider.astro";
           />
         </div>
         <div class="field">
-          <label for="email">Correo electrónico</label>
+          <label for="email">{t("contacto.form.email")}</label>
           <input
             id="email"
             name="email"
@@ -49,51 +52,55 @@ import BurntDivider from "../../components/BurntDivider.astro";
           />
         </div>
         <div class="field">
-          <label for="tipo">Tipo de encargo</label>
+          <label for="tipo">{t("contacto.form.tipo")}</label>
           <select id="tipo" name="tipo">
-            <option>Falla grande</option>
-            <option>Falla infantil</option>
-            <option>Ninot individual</option>
-            <option>Restauración</option>
-            <option>Taller de iniciación</option>
-            <option>Otro</option>
+            <option>{t("contacto.form.tipo.fallaGrande")}</option>
+            <option>{t("contacto.form.tipo.fallaInfantil")}</option>
+            <option>{t("contacto.form.tipo.ninot")}</option>
+            <option>{t("contacto.form.tipo.restauracion")}</option>
+            <option>{t("contacto.form.tipo.taller")}</option>
+            <option>{t("contacto.form.tipo.otro")}</option>
           </select>
         </div>
         <div class="field">
-          <label for="mensaje">Cuéntale a Dani tu idea</label>
+          <label for="mensaje">{t("contacto.form.mensaje")}</label>
           <textarea
             id="mensaje"
             name="mensaje"
             rows="6"
             required
-            placeholder="Escala aproximada, plazo, presupuesto orientativo, referencias..."
-          ></textarea>
+            placeholder={t("contacto.form.mensaje.placeholder")}></textarea>
         </div>
-        <button type="submit" class="btn btn-primary">Enviar mensaje</button>
+        <button type="submit" class="btn btn-primary"
+          >{t("contacto.form.enviar")}</button
+        >
         <p class="form-note">
-          Este formulario abre tu gestor de correo. Si prefieres, escribe
-          directamente a
-          <a href="mailto:hola@atelierdelfoc.com">hola@atelierdelfoc.com</a>.
+          {t("contacto.form.nota")}
+          <a href="mailto:latelierdelfoc@gmail.com">latelierdelfoc@gmail.com</a
+          >.
         </p>
       </form>
 
       <aside class="contact-info">
         <div class="info-block">
-          <p class="eyebrow">Taller</p>
-          <p>l'Atelier del Foc<br />Visitas con cita previa</p>
-        </div>
-        <div class="info-block">
-          <p class="eyebrow">Correo</p>
+          <p class="eyebrow">{t("contacto.info.taller.eyebrow")}</p>
           <p>
-            <a href="mailto:hola@atelierdelfoc.com">hola@atelierdelfoc.com</a>
+            {t("contacto.info.taller.text")}<br />{
+              t("contacto.info.taller.visitas")
+            }
           </p>
         </div>
         <div class="info-block">
-          <p class="eyebrow">Plazos</p>
+          <p class="eyebrow">{t("contacto.info.correo.eyebrow")}</p>
           <p>
-            Los encargos de falla grande e infantil se reservan con meses de
-            antelación, sobre todo de cara a marzo.
+            <a href="mailto:latelierdelfoc@gmail.com"
+              >latelierdelfoc@gmail.com</a
+            >
           </p>
+        </div>
+        <div class="info-block">
+          <p class="eyebrow">{t("contacto.info.plazos.eyebrow")}</p>
+          <p>{t("contacto.info.plazos.text")}</p>
         </div>
       </aside>
     </div>

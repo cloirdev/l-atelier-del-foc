@@ -1,0 +1,214 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import BurntDivider from "../../../components/BurntDivider.astro";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+
+const servicios = [1, 2, 3, 4, 5].map((n) => ({
+  n: String(n).padStart(2, "0"),
+  title: t(`serv.item.${n}.title` as any),
+  text: t(`serv.item.${n}.text` as any),
+  tag: t(`serv.item.${n}.tag` as any),
+}));
+
+const proceso = [1, 2, 3, 4].map((n) => ({
+  n: String(n).padStart(2, "0"),
+  label: t(`serv.proc.${n}.label` as any),
+  text: t(`serv.proc.${n}.text` as any),
+}));
+---
+
+<Layout title={t("serv.title")} description={t("serv.lede")}>
+  <section class="serv-hero">
+    <div class="wrap">
+      <p class="eyebrow">{t("serv.eyebrow")}</p>
+      <h1>{t("serv.title")}</h1>
+      <p class="lede">{t("serv.lede")}</p>
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--paper-dark)" />
+
+  <section class="section serv-list">
+    <div class="wrap">
+      <ul class="services">
+        {
+          servicios.map((s) => (
+            <li>
+              <span class="s-n">{s.n}</span>
+              <div class="s-body">
+                <div class="s-head">
+                  <h2>{s.title}</h2>
+                  <span class="tag">{s.tag}</span>
+                </div>
+                <p>{s.text}</p>
+              </div>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--wood-dark)" flip />
+
+  <section class="section serv-process">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-light">{t("serv.proc.eyebrow")}</p>
+      <h2 class="proc-title">{t("serv.proc.title")}</h2>
+      <ol class="steps">
+        {
+          proceso.map((p) => (
+            <li class="step">
+              <span class="step-n">{p.n}</span>
+              <h3>{p.label}</h3>
+              <p>{p.text}</p>
+            </li>
+          ))
+        }
+      </ol>
+    </div>
+  </section>
+
+  <BurntDivider fill="var(--paper)" />
+
+  <section class="section cta-simple">
+    <div class="wrap cta-simple-inner">
+      <h2>{t("serv.cta.title")}</h2>
+      <p>{t("serv.cta.text")}</p>
+      <a class="btn btn-primary" href={`/${lang}/contacto/`}
+        >{t("serv.cta.button")}</a
+      >
+    </div>
+  </section>
+</Layout>
+
+<style>
+  .serv-hero {
+    background: var(--paper);
+    padding: 64px 0 52px;
+  }
+  h1 {
+    font-size: clamp(38px, 5vw, 56px);
+    margin: 10px 0 18px;
+  }
+  .lede {
+    font-size: 17px;
+    color: var(--wood-dark);
+    max-width: 62ch;
+  }
+
+  .serv-list {
+    background: var(--paper-dark);
+  }
+  .services {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .services li {
+    display: grid;
+    grid-template-columns: 70px 1fr;
+    gap: 24px;
+    padding: 30px 0;
+    border-top: 1px solid rgba(74, 52, 35, 0.16);
+  }
+  .services li:last-child {
+    border-bottom: 1px solid rgba(74, 52, 35, 0.16);
+  }
+  .s-n {
+    font-family: var(--font-mono);
+    color: var(--ember);
+    font-size: 15px;
+    padding-top: 4px;
+  }
+  .s-head {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 8px;
+  }
+  .s-head h2 {
+    font-size: 22px;
+  }
+  .s-body p {
+    color: var(--wood-dark);
+    max-width: 62ch;
+  }
+
+  .serv-process {
+    background: var(--wood-dark);
+  }
+  .eyebrow-light {
+    color: var(--ember-light);
+  }
+  .proc-title {
+    color: var(--white-smoke);
+    font-size: clamp(24px, 3vw, 32px);
+    margin: 10px 0 40px;
+    max-width: 24ch;
+  }
+  .steps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 26px;
+  }
+  .step {
+    border-top: 2px solid var(--ember);
+    padding-top: 16px;
+  }
+  .step-n {
+    display: block;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ember-light);
+    margin-bottom: 10px;
+  }
+  .step h3 {
+    color: var(--white-smoke);
+    font-size: 19px;
+    margin-bottom: 8px;
+  }
+  .step p {
+    color: var(--cork);
+    font-size: 14px;
+  }
+
+  .cta-simple {
+    background: var(--paper);
+    text-align: center;
+  }
+  .cta-simple-inner h2 {
+    font-size: clamp(24px, 3vw, 30px);
+    margin-bottom: 12px;
+  }
+  .cta-simple-inner p {
+    color: var(--wood-dark);
+    margin-bottom: 26px;
+  }
+
+  @media (max-width: 760px) {
+    .steps {
+      grid-template-columns: 1fr 1fr;
+    }
+    .services li {
+      grid-template-columns: 50px 1fr;
+    }
+  }
+  @media (max-width: 480px) {
+    .steps {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

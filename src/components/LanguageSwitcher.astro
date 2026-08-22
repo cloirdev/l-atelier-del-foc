@@ -1,0 +1,73 @@
+---
+const { pathname, hash } = Astro.url;
+const segments = pathname.split("/").filter(Boolean);
+const currentLang = segments[0] === "es" ? "es" : "va";
+const rest =
+  segments[0] === "es" || segments[0] === "va"
+    ? segments.slice(1).join("/")
+    : segments.join("/");
+
+const langs = [
+  { code: "es", label: "CAS" },
+  { code: "va", label: "VAL" },
+];
+---
+
+<div class="lang-switch" role="group" aria-label="Cambiar idioma">
+  {
+    langs.map((l) => (
+      <a
+        href={`/${l.code}/${rest ? rest + "/" : ""}${hash}`}
+        class:list={["lang-btn", { active: currentLang === l.code }]}
+        aria-current={currentLang === l.code ? "true" : undefined}
+        data-lang-link
+      >
+        {l.label}
+      </a>
+    ))
+  }
+</div>
+
+<style>
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    border: 1.5px solid var(--ember);
+    border-radius: 6px;
+    overflow: hidden;
+    flex: none;
+  }
+  .lang-btn {
+    font-family: var(--font-mono);
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    text-align: center;
+    padding: 4px 10px;
+    color: var(--paper-dark);
+    opacity: 0.6;
+    transition:
+      background 0.2s ease,
+      color 0.2s ease,
+      opacity 0.2s ease;
+  }
+
+  .lang-btn:hover {
+    opacity: 0.9;
+  }
+  .lang-btn.active {
+    background: var(--ember);
+    color: var(--white-smoke);
+    opacity: 1;
+    font-weight: 700;
+  }
+</style>
+
+<script>
+  document
+    .querySelectorAll<HTMLAnchorElement>("[data-lang-link]")
+    .forEach((link) => {
+      link.addEventListener("click", () => {
+        sessionStorage.setItem("scrollY", String(window.scrollY));
+      });
+    });
+</script>

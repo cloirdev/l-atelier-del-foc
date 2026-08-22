@@ -1,4 +1,9 @@
 ---
+import { getLangFromUrl, useTranslations } from "../i18n/utils";
+
+const currentLang = getLangFromUrl(Astro.url);
+const t = useTranslations(currentLang);
+
 const year = new Date().getFullYear();
 ---
 
@@ -7,27 +12,25 @@ const year = new Date().getFullYear();
     <div class="col">
       <p class="foot-word">L'Atelier del Foc</p>
       <p class="foot-desc">
-        Taller de arte fallero de Dani. Del boceto a la cremà, cada pieza se
-        construye para arder con sentido.
+        {t("footer.descripcion")}
       </p>
     </div>
     <div class="col">
       <p class="eyebrow">Taller</p>
-      <a href="/sobre-mi/">Sobre Dani</a>
-      <a href="/servicios/">Servicios</a>
+      <a href={`/${currentLang}/sobre-mi/`}>Sobre Dani</a>
+      <a href={`/${currentLang}/servicios/`}>Servicios</a>
     </div>
     <div class="col">
       <p class="eyebrow">Contacto</p>
-      <a href="mailto:hola@atelierdelfoc.com">hola@atelierdelfoc.com</a>
-      <a href="/contacto/">Escribir un mensaje</a>
-      <a href="/blog/">Bitácora del taller</a>
+      <a href="mailto:latelierdelfoc@gmail.com">latelierdelfoc@gmail.com</a>
+      <a href={`/${currentLang}/contacto/`}>{t("footer.contacto.mensaje")}</a>
     </div>
   </div>
   <div class="wrap bottom">
     <p>© {year} L'Atelier del Foc — Dani. Hecho a mano, como todo lo demás.</p>
+    <p>Web creada por <a href="https://www.cloir.dev">Cloir.dev</a></p>
   </div>
 </footer>
-
 <style>
   .site-footer {
     background: var(--wood-dark);

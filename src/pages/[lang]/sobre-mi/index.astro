@@ -1,43 +1,33 @@
 ---
-import Layout from "../../layouts/Layout.astro";
-import BurntDivider from "../../components/BurntDivider.astro";
+import Layout from "../../../layouts/Layout.astro";
+import BurntDivider from "../../../components/BurntDivider.astro";
 import { Image } from "astro:assets";
-import fotoDani from "../../assets/greek-dani.webp";
+import fotoDani from "../../../assets/greek-dani.webp";
+import { languages } from "../../../i18n/ui";
+import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+export function getStaticPaths() {
+  return Object.keys(languages).map((lang) => ({ params: { lang } }));
+}
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
 
 const hitos = [
-  {
-    year: "2013",
-    text: "Primeros pasos en el casal, ayudando a montar armazones de ferralla.",
-  },
-  {
-    year: "2017",
-    text: "Primer ninot propio para una falla infantil del barrio.",
-  },
-  {
-    year: "2021",
-    text: "Primera falla grande firmada en solitario: mención de la Junta Local.",
-  },
-  {
-    year: "2024",
-    text: "Abre l\u2019Atelier del Foc para encargos particulares y de casals.",
-  },
+  { year: "2013", text: t("sobremi.hito1") },
+  { year: "2017", text: t("sobremi.hito2") },
+  { year: "2021", text: t("sobremi.hito3") },
+  { year: "2024", text: t("sobremi.hito4") },
 ];
 ---
 
-<Layout
-  title="Sobre Dani"
-  description="Conoce a Dani, artista fallero y fundador de l'Atelier del Foc."
->
+<Layout title={t("sobremi.title")} description={t("sobremi.desc")}>
   <section class="hero-page">
     <div class="wrap hero-page-grid">
       <div>
-        <p class="eyebrow">El artista</p>
-        <h1>Dani</h1>
-        <p class="lede">
-          Escultor y pintor fallero. Trabaja el corcho blanco, el cartón piedra
-          y la ferralla con la misma calma con la que otros trabajan el mármol,
-          sabiendo que en marzo todo eso será ceniza.
-        </p>
+        <p class="eyebrow">{t("sobremi.eyebrow")}</p>
+        <h1>{t("sobremi.h1")}</h1>
+        <p class="lede">{t("sobremi.lede")}</p>
       </div>
       <Image src={fotoDani} alt="Foto de Daniel López" width="300" />
     </div>
@@ -48,33 +38,19 @@ const hitos = [
   <section class="section bio">
     <div class="wrap bio-grid">
       <div class="bio-copy">
-        <h2>La sátira como oficio</h2>
-        <p>
-          Dani empezó como ayudante de armazón en el casal del barrio, cargando
-          ferralla y aprendiendo a leer proporciones a ojo. Con los años pasó al
-          modelado en corcho blanco, después a la pintura, y terminó firmando
-          sus propios ninots.
-        </p>
-        <p>
-          Hoy dirige l'Atelier del Foc, un taller pequeño donde cada pieza se
-          piensa dos veces: una para que haga gracia, y otra para que aguante
-          todo el año hasta la cremà. Le interesa la tradición fallera tanto
-          como la escultura contemporánea, y busca ese cruce en cada encargo.
-        </p>
-        <p>
-          Fuera del taller, Dani colabora dando talleres de iniciación al
-          modelado en corcho para jóvenes falleros que, como él en su día,
-          empiezan cargando ferralla.
-        </p>
+        <h2>{t("sobremi.bio.h2")}</h2>
+        <p>{t("sobremi.bio.p1")}</p>
+        <p>{t("sobremi.bio.p2")}</p>
+        <p>{t("sobremi.bio.p3")}</p>
       </div>
       <aside class="bio-facts">
-        <p class="eyebrow">Materiales habituales</p>
+        <p class="eyebrow">{t("sobremi.materiales.eyebrow")}</p>
         <ul>
-          <li>Corcho blanco (poliestireno expandido)</li>
-          <li>Cartón piedra</li>
-          <li>Ferralla y madera de armazón</li>
-          <li>Pintura plástica y esmalte</li>
-          <li>Fibra de vidrio para acabados</li>
+          <li>{t("sobremi.materiales.1")}</li>
+          <li>{t("sobremi.materiales.2")}</li>
+          <li>{t("sobremi.materiales.3")}</li>
+          <li>{t("sobremi.materiales.4")}</li>
+          <li>{t("sobremi.materiales.5")}</li>
         </ul>
       </aside>
     </div>
@@ -84,8 +60,8 @@ const hitos = [
 
   <section class="section timeline">
     <div class="wrap">
-      <p class="eyebrow eyebrow-light">Trayectoria</p>
-      <h2 class="timeline-title">Once años de banco de trabajo</h2>
+      <p class="eyebrow eyebrow-light">{t("sobremi.timeline.eyebrow")}</p>
+      <h2 class="timeline-title">{t("sobremi.timeline.title")}</h2>
       <ol class="hitos">
         {
           hitos.map((h) => (
@@ -103,12 +79,11 @@ const hitos = [
 
   <section class="section cta-simple">
     <div class="wrap cta-simple-inner">
-      <h2>¿Quieres encargarle una pieza a Dani?</h2>
-      <a class="btn btn-primary" href="/servicios/">Ver servicios y encargos</a>
+      <h2>{t("sobremi.cta.title")}</h2>
+      <a class="btn btn-primary" href={`/${lang}/servicios/`}>{t("sobremi.cta.button")}</a>
     </div>
   </section>
 </Layout>
-
 <style>
   .hero-page {
     background: var(--paper);

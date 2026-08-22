@@ -1,23 +1,42 @@
-@import url("https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Archivo:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap");
 
 :root {
-  /* Paleta: materiales del taller */
-  --paper: #ede4d3;
-  --paper-dark: #e1d4b8;
-  --wood: #7c5a3a;
-  --wood-dark: #4a3423;
-  --soot: #2b2420;
-  --ember: #c1440e;
-  --ember-light: #e8792f;
-  --cork: #c9a66b;
-  --white-smoke: #f7f2e9;
+  /* Paleta: L'Atelier del Foc — blanco/negro + colores de las mascotas (batido y foc) */
+  --white: #ffffff;
+  --black: #141210;
+  --paper: #f7f5f0; /* blanco cálido para fondos, en vez de blanco puro */
+  --paper-dark: #ece8de; /* variante ligeramente más oscura para franjas alternas */
 
-  --font-display: "Fraunces", serif;
+  --sky: #c5d6dd; /* azul grisáceo del batido */
+  --terracotta: #af6b5e; /* del batido/foc */
+  --mustard: #e5d86f; /* llama del foc */
+
+  /* Alias para no reescribir todo el código existente */
+  --wood: var(--terracotta);
+  --wood-dark: var(--black);
+  --soot: var(--black);
+  --ember: var(--terracotta);
+  --ember-light: var(--mustard);
+  --cork: var(--sky);
+  --white-smoke: var(--white);
+
+  --font-display: "Archivo", sans-serif;
   --font-body: "Archivo", sans-serif;
   --font-mono: "Space Mono", monospace;
 
   --max-width: 1120px;
   --radius-sm: 3px;
+}
+
+:root[data-theme="dark"] {
+  --paper: #1c1a17;
+  --paper-dark: #141210;
+  --black: #f7f5f0;
+  --white: #141210;
+
+  --sky: #7d94a0;
+  --terracotta: #d98d7d;
+  --mustard: #e5d86f;
 }
 
 *,
@@ -48,11 +67,21 @@ html {
 body {
   margin: 0;
   background: var(--paper);
-  color: var(--soot);
+  color: var(--black);
   font-family: var(--font-body);
   font-size: 17px;
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+}
+
+body,
+.site-header,
+.btn,
+.tag {
+  transition:
+    background-color 0.35s ease,
+    color 0.35s ease,
+    border-color 0.35s ease;
 }
 
 h1,
@@ -60,10 +89,10 @@ h2,
 h3,
 h4 {
   font-family: var(--font-display);
-  font-weight: 600;
+  font-weight: 700;
   line-height: 1.08;
   margin: 0;
-  color: var(--soot);
+  color: var(--black);
 }
 
 p {
@@ -91,7 +120,7 @@ img {
   font-size: 12.5px;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--ember);
+  color: var(--terracotta);
 }
 
 .btn {
@@ -104,7 +133,7 @@ img {
   text-transform: uppercase;
   padding: 13px 22px;
   border-radius: var(--radius-sm);
-  border: 1.5px solid var(--soot);
+  border: 1.5px solid var(--black);
   transition:
     background 0.2s ease,
     color 0.2s ease,
@@ -113,23 +142,23 @@ img {
 }
 
 .btn-primary {
-  background: var(--ember);
-  border-color: var(--ember);
-  color: var(--white-smoke);
+  background: var(--black);
+  border-color: var(--black);
+  color: var(--white);
 }
 .btn-primary:hover {
-  background: var(--soot);
-  border-color: var(--soot);
+  background: var(--terracotta);
+  border-color: var(--terracotta);
   transform: translateY(-1px);
 }
 
 .btn-ghost {
   background: transparent;
-  color: var(--soot);
+  color: var(--black);
 }
 .btn-ghost:hover {
-  background: var(--soot);
-  color: var(--white-smoke);
+  background: var(--black);
+  color: var(--white);
   transform: translateY(-1px);
 }
 
@@ -149,9 +178,9 @@ img {
   font-size: 12px;
   letter-spacing: 0.04em;
   padding: 4px 10px;
-  border: 1px solid var(--cork);
+  border: 1px solid var(--sky);
   border-radius: var(--radius-sm);
-  color: var(--wood-dark);
+  color: var(--black);
   background: var(--paper-dark);
 }
 
@@ -169,6 +198,6 @@ a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 textarea:focus-visible {
-  outline: 2.5px solid var(--ember);
+  outline: 2.5px solid var(--terracotta);
   outline-offset: 3px;
 }

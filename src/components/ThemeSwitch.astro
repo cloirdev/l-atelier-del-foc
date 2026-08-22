@@ -1,0 +1,158 @@
+---
+---
+
+<button
+  id="theme-switch"
+  class="theme-switch"
+  aria-label="Cambiar tema"
+  aria-pressed="false"
+  type="button"
+>
+  <svg viewBox="0 0 24 24" class="fire-icon" aria-hidden="true">
+    <!-- chispas / base -->
+    <g class="sparks" fill-rule="evenodd" clip-rule="evenodd">
+      <path d="M3.31307 14.6996C3.4791 14.3201 3.92132 14.147 4.3008 14.3131L9.3008 16.5006C9.68029 16.6666 9.85333 17.1088 9.68731 17.4883C9.52128 17.8678 9.07906 18.0408 8.69957 17.8748L3.69958 15.6873C3.32009 15.5213 3.14705 15.0791 3.31307 14.6996ZM20.6873 14.6996C20.8533 15.0791 20.6803 15.5213 20.3008 15.6873L4.3008 22.6873C3.92132 22.8533 3.4791 22.6803 3.31307 22.3008C3.14705 21.9213 3.32009 21.4791 3.69958 21.3131L19.6996 14.3131C20.0791 14.147 20.5213 14.3201 20.6873 14.6996ZM13.8131 19.2933C13.9791 18.9138 14.4213 18.7408 14.8008 18.9068L20.3008 21.3131C20.6803 21.4791 20.8533 21.9213 20.6873 22.3008C20.5213 22.6803 20.0791 22.8533 19.6996 22.6873L14.1996 20.2811C13.8201 20.115 13.647 19.6728 13.8131 19.2933Z" />
+    </g>
+
+    <!-- llama, viva en modo claro -->
+    <path
+      class="flame"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M11.6 15C13.7333 15 18 13.7615 18 8.80745C18 5.776 16.1512 3.5774 14.4009 2.2646C13.503 1.59108 12.3529 2.28965 12.3529 3.38896C12.3529 4.13169 12.1424 5.36614 11.5596 6.27998C10.8777 7.34944 9.75127 6.421 9.57296 5.17624C9.48354 4.55201 8.79638 4.29388 8.26099 4.65274C7.20839 5.35826 6 6.71017 6 8.80745C6 13.7615 9.73333 15 11.6 15ZM15.2155 9.28163C15.6123 9.40065 15.8374 9.81877 15.7184 10.2155C15.4495 11.1119 14.3344 12.75 12 12.75C11.5858 12.75 11.25 12.4142 11.25 12C11.25 11.5858 11.5858 11.25 12 11.25C13.5056 11.25 14.1505 10.2215 14.2816 9.78449C14.4007 9.38774 14.8188 9.16261 15.2155 9.28163Z"
+    ></path>
+
+    <!-- brasas, aparecen en modo oscuro (mismo hueco que la llama, apagado) -->
+    <path
+      class="embers"
+      fill-rule="evenodd"
+      clip-rule="evenodd"
+      d="M11.6 15C12.8 15 14.9 14.6 16.3 13.1C15.2 13.9 13.6 14.2 11.6 14.2C9.6 14.2 8 13.9 6.9 13.1C8.3 14.6 10.4 15 11.6 15Z"
+    ></path>
+
+    <!-- humo, sube en modo oscuro -->
+    <g class="smoke">
+      <path
+        class="smoke-line smoke-a"
+        d="M10.5 3.5c-1.4 1.6.8 2.4-.6 4.4"
+        stroke-width="0.9"
+        stroke-linecap="round"
+        fill="none"
+      ></path>
+      <path
+        class="smoke-line smoke-b"
+        d="M13.2 2.8c-1.4 1.8.9 2.6-.5 4.8"
+        stroke-width="0.8"
+        stroke-linecap="round"
+        fill="none"
+      ></path>
+    </g>
+  </svg>
+</button>
+
+<style>
+  .theme-switch {
+    background: transparent;
+    border: none;
+    padding: 6px;
+    cursor: pointer;
+    flex: none;
+    display: flex;
+    align-items: center;
+  }
+
+  .fire-icon {
+    width: 24px;
+    height: 24px;
+    overflow: visible;
+  }
+
+  .sparks {
+    fill: var(--ember);
+    opacity: 0.5;
+    transition: fill 0.4s ease, opacity 0.4s ease;
+  }
+
+  .flame {
+    fill: var(--ember);
+    transform-origin: 12px 15px;
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    animation: flicker 3s ease-in-out infinite;
+  }
+
+  .embers {
+    fill: var(--wood, #6b6259);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .smoke {
+    opacity: 0;
+    transition: opacity 0.5s ease 0.1s;
+  }
+  .smoke-line {
+    stroke: var(--paper-dark, #9a9488);
+  }
+
+  /* --- Estado oscuro: fuego apagado --- */
+  :root[data-theme="dark"] .flame {
+    opacity: 0;
+    transform: scale(0.5) translateY(4px);
+  }
+  :root[data-theme="dark"] .embers {
+    opacity: 1;
+  }
+  :root[data-theme="dark"] .sparks {
+    opacity: 0.25;
+  }
+  :root[data-theme="dark"] .smoke {
+    opacity: 0.6;
+  }
+  :root[data-theme="dark"] .smoke-line {
+    animation: rise 3.5s ease-in-out infinite;
+  }
+  :root[data-theme="dark"] .smoke-b {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes flicker {
+    0%, 100% { transform: skewX(0deg) scaleY(1); }
+    30% { transform: skewX(-2deg) scaleY(1.03); }
+    60% { transform: skewX(1.5deg) scaleY(0.97); }
+  }
+
+  @keyframes rise {
+    0% { opacity: 0; transform: translateY(2px); }
+    30% { opacity: 0.6; }
+    100% { opacity: 0; transform: translateY(-6px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .flame,
+    .smoke-line {
+      animation: none;
+    }
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = "atelier-theme";
+  const root = document.documentElement;
+  const btn = document.getElementById("theme-switch");
+
+  function applyTheme(theme: string) {
+    root.setAttribute("data-theme", theme);
+    btn?.setAttribute("aria-pressed", String(theme === "dark"));
+  }
+
+  const saved = localStorage.getItem(STORAGE_KEY);
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  applyTheme(saved ?? (prefersDark ? "dark" : "light"));
+
+  btn?.addEventListener("click", () => {
+    const current = root.getAttribute("data-theme");
+    const next = current === "dark" ? "light" : "dark";
+    applyTheme(next);
+    localStorage.setItem(STORAGE_KEY, next);
+  });
+</script>
