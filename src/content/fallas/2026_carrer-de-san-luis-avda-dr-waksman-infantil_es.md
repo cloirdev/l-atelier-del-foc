@@ -3,8 +3,7 @@ falla: "Carrer de San Luis - Avda. Dr. Waksman"
 año: 2026
 lema: "Mare Nostrum"
 seccion: "6ª"
-premios:
-  - "Ninot indultat, Exposición del Ninot"
+premios: []
 foto: ./2026-san-luis-dr-waksman.jpg
 ---
 

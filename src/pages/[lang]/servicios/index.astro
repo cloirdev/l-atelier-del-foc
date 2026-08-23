@@ -1,8 +1,27 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import BurntDivider from "../../../components/BurntDivider.astro";
+import { Image } from "astro:assets";
 import { languages } from "../../../i18n/ui";
 import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
+
+import falla1 from "../../../assets/servicios/fallas-infantiles/falla-1.jpg";
+import falla2 from "../../../assets/servicios/fallas-infantiles/falla-2.jpg";
+import falla3 from "../../../assets/servicios/fallas-infantiles/falla-3.jpg";
+
+import ninot1 from "../../../assets/servicios/ninots/ninot-1.png";
+import ninot2 from "../../../assets/servicios/ninots/ninot-2.png";
+import ninot3 from "../../../assets/servicios/ninots/ninot-3.png";
+
+import batidoFallero from "../../../assets/servicios/batidos/batido-fallero.png";
+import batidoFontanero from "../../../assets/servicios/batidos/batido-fontanero.png";
+import batidoIndigena from "../../../assets/servicios/batidos/batido-indigena.png";
+import batidoMedusa from "../../../assets/servicios/batidos/batido-medusa.png";
+import batidoMonje from "../../../assets/servicios/batidos/batido-monje.png";
+import batidoRojo from "../../../assets/servicios/batidos/batido-rojo.png";
+
+import poster1 from "../../../assets/servicios/ilustraciones/poster-1.jpg";
+import lamina1 from "../../../assets/servicios/ilustraciones/lamina-1.jpg";
+import poster2 from "../../../assets/servicios/ilustraciones/poster-2.jpg";
 
 export function getStaticPaths() {
   return Object.keys(languages).map((lang) => ({ params: { lang } }));
@@ -10,18 +29,86 @@ export function getStaticPaths() {
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-
-const servicios = [1, 2, 3, 4].map((n) => ({
-  n: String(n).padStart(2, "0"),
-  title: t(`serv.item.${n}.title` as any),
-  text: t(`serv.item.${n}.text` as any),
-  tag: t(`serv.item.${n}.tag` as any),
-}));
+const isVa = lang === "va";
 
 const proceso = [1, 2, 3, 4].map((n) => ({
   n: String(n).padStart(2, "0"),
   label: t(`serv.proc.${n}.label` as any),
   text: t(`serv.proc.${n}.text` as any),
+}));
+
+const fallasData = [
+  {
+    img: falla1,
+    es: "Falla infantil, casal Sevilla-Denia",
+    va: "Falla infantil, casal Sevilla-Denia",
+  },
+  {
+    img: falla2,
+    es: "Falla infantil, casal Trinidad-Alboraya",
+    va: "Falla infantil, casal Trinitat-Alboraia",
+  },
+  {
+    img: falla3,
+    es: "Falla infantil, casal Carrer de San Luis",
+    va: "Falla infantil, casal Carrer de Sant Lluís",
+  },
+];
+
+const ninotsData = [
+  {
+    img: ninot1,
+    es: "Ninot individual, encargo particular",
+    va: "Ninot individual, encàrrec particular",
+  },
+  {
+    img: ninot2,
+    es: "Ninot individual, pieza de colección",
+    va: "Ninot individual, peça de col·lecció",
+  },
+  {
+    img: ninot3,
+    es: "Ninot individual, regalo personalizado",
+    va: "Ninot individual, regal personalitzat",
+  },
+];
+
+const batidosData = [
+  { img: batidoFallero, es: "Batido Fallero", va: "Batut Faller" },
+  { img: batidoFontanero, es: "Batido Fontanero", va: "Batut Fontaner" },
+  { img: batidoIndigena, es: "Batido Indígena", va: "Batut Indígena" },
+  { img: batidoMedusa, es: "Batido Medusa", va: "Batut Medusa" },
+  { img: batidoMonje, es: "Batido Monje", va: "Batut Monjo" },
+  { img: batidoRojo, es: "Batido Rojo", va: "Batut Roig" },
+];
+
+const ilustracionesData = [
+  {
+    img: poster1,
+    es: "Cartel de falla",
+    va: "Cartell de falla",
+    video: "/videos/poster-1-proceso.mp4",
+  },
+  { img: lamina1, es: "Lámina decorativa", va: "Làmina decorativa" },
+  { img: poster2, es: "Póster de comisión", va: "Pòster de comissió" },
+];
+
+const fallas = fallasData.map((f) => ({
+  title: isVa ? f.va : f.es,
+  img: f.img,
+}));
+const ninots = ninotsData.map((n) => ({
+  title: isVa ? n.va : n.es,
+  img: n.img,
+}));
+const batidos = batidosData.map((b) => ({
+  title: isVa ? b.va : b.es,
+  img: b.img,
+}));
+const ilustraciones = ilustracionesData.map((i) => ({
+  title: isVa ? i.va : i.es,
+  img: i.img,
+  video: i.video ?? null,
 }));
 ---
 
@@ -34,30 +121,137 @@ const proceso = [1, 2, 3, 4].map((n) => ({
     </div>
   </section>
 
-  <BurntDivider fill="var(--paper-dark)" />
-
-  <section class="section serv-list">
-    <div class="wrap">
-      <ul class="services">
-        {
-          servicios.map((s) => (
-            <li>
-              <span class="s-n">{s.n}</span>
-              <div class="s-body">
-                <div class="s-head">
-                  <h2>{s.title}</h2>
-                  <span class="tag">{s.tag}</span>
-                </div>
-                <p>{s.text}</p>
-              </div>
-            </li>
-          ))
-        }
-      </ul>
+  <!-- Fallas infantiles -->
+  <section class="scrolly bloque-a">
+    <div class="scrolly-track scrolly-track--fallas">
+      <div class="scrolly-pin">
+        <div class="wrap">
+          <p class="eyebrow">{t("serv.fallas.eyebrow")}</p>
+          <h2>{t("serv.fallas.title")}</h2>
+          <p class="bloque-text">{t("serv.fallas.text")}</p>
+          <p class="precio-nota">{t("serv.precio.nota")}</p>
+          <div class="scrolly-imgs">
+            {
+              fallas.map((f) => (
+                <figure class="scrolly-img">
+                  <div class="foto-wrap">
+                    <Image
+                      src={f.img}
+                      alt={f.title}
+                      width={500}
+                      format="webp"
+                    />
+                  </div>
+                  <figcaption>{f.title}</figcaption>
+                </figure>
+              ))
+            }
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 
-  <BurntDivider fill="var(--wood-dark)" flip />
+  <!-- Ninots personalizados -->
+  <section class="scrolly bloque-b">
+    <div class="scrolly-track scrolly-track--ninots">
+      <div class="scrolly-pin">
+        <div class="wrap">
+          <p class="eyebrow">{t("serv.ninots.eyebrow")}</p>
+          <h2>{t("serv.ninots.title")}</h2>
+          <p class="bloque-text">{t("serv.ninots.text")}</p>
+          <p class="precio-nota">{t("serv.precio.nota")}</p>
+          <div class="scrolly-imgs">
+            {
+              ninots.map((n) => (
+                <figure class="scrolly-img">
+                  <div class="foto-wrap">
+                    <Image
+                      src={n.img}
+                      alt={n.title}
+                      width={500}
+                      format="webp"
+                    />
+                  </div>
+                  <figcaption>{n.title}</figcaption>
+                </figure>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Batidos personalizados en 3D -->
+  <section class="section serv-batidos">
+    <div class="wrap">
+      <p class="eyebrow eyebrow-light">{t("serv.batidos.eyebrow")}</p>
+      <h2 class="titulo-claro">{t("serv.batidos.title")}</h2>
+      <p class="bloque-text texto-claro">{t("serv.batidos.text")}</p>
+      <p class="precio-nota precio-nota-claro">{t("serv.precio.nota")}</p>
+
+      <p class="galeria-label">{t("serv.batidos.galeria.title")}</p>
+      <div class="galeria-grid">
+        {
+          batidos.map((b) => (
+            <figure class="galeria-item">
+              <div class="galeria-foto">
+                <Image src={b.img} alt={b.title} width={640} format="webp" />
+              </div>
+              <figcaption>{b.title}</figcaption>
+            </figure>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- Ilustraciones -->
+  <section class="scrolly bloque-a">
+    <div class="scrolly-track scrolly-track--ilustraciones">
+      <div class="scrolly-pin">
+        <div class="wrap">
+          <p class="eyebrow">{t("serv.ilustraciones.eyebrow")}</p>
+          <h2>{t("serv.ilustraciones.title")}</h2>
+          <p class="bloque-text">{t("serv.ilustraciones.text")}</p>
+          <p class="precio-nota">{t("serv.precio.nota")}</p>
+          <div class="scrolly-imgs">
+            {
+              ilustraciones.map((it) => (
+                <figure
+                  class:list={["scrolly-img", it.video && "scrolly-img--video"]}
+                  data-video={it.video ?? undefined}
+                >
+                  <div class="foto-wrap">
+                    <Image
+                      src={it.img}
+                      alt={it.title}
+                      width={500}
+                      format="webp"
+                    />
+                    {it.video && (
+                      <span class="play-badge" aria-hidden="true">
+                        ▶ Ver proceso
+                      </span>
+                    )}
+                  </div>
+                  <figcaption>{it.title}</figcaption>
+                </figure>
+              ))
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <dialog id="video-modal" class="video-modal">
+    <button type="button" class="video-modal-close" aria-label="Cerrar"
+      >✕</button
+    >
+    <div class="video-modal-body"></div>
+  </dialog>
 
   <section class="section serv-process">
     <div class="wrap">
@@ -77,8 +271,6 @@ const proceso = [1, 2, 3, 4].map((n) => ({
     </div>
   </section>
 
-  <BurntDivider fill="var(--paper)" />
-
   <section class="section cta-simple">
     <div class="wrap cta-simple-inner">
       <h2>{t("serv.cta.title")}</h2>
@@ -94,6 +286,8 @@ const proceso = [1, 2, 3, 4].map((n) => ({
   .serv-hero {
     background: var(--paper);
     padding: 64px 0 52px;
+    display: flex;
+    align-items: center;
   }
   h1 {
     font-size: clamp(38px, 5vw, 56px);
@@ -105,53 +299,322 @@ const proceso = [1, 2, 3, 4].map((n) => ({
     max-width: 62ch;
   }
 
-  .serv-list {
+  .bloque-a {
     background: var(--paper-dark);
   }
-  .services {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
-  .services li {
-    display: grid;
-    grid-template-columns: 70px 1fr;
-    gap: 24px;
-    padding: 30px 0;
-    border-top: 1px solid rgba(74, 52, 35, 0.16);
-  }
-  .services li:last-child {
-    border-bottom: 1px solid rgba(74, 52, 35, 0.16);
-  }
-  .s-n {
-    font-family: var(--font-mono);
-    color: var(--ember);
-    font-size: 15px;
-    padding-top: 4px;
-  }
-  .s-head {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
-  }
-  .s-head h2 {
-    font-size: 22px;
-  }
-  .s-body p {
-    color: var(--wood-dark);
-    max-width: 62ch;
+  .bloque-b {
+    background: var(--paper);
   }
 
-  .serv-process {
+  .scrolly h2 {
+    font-size: clamp(26px, 3.4vw, 36px);
+    margin: 10px 0 14px;
+  }
+  .bloque-text {
+    color: var(--wood-dark);
+    max-width: 62ch;
+    font-size: 16px;
+    line-height: 1.6;
+    margin-bottom: 10px;
+  }
+  .precio-nota {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    letter-spacing: 0.03em;
+    color: var(--ember);
+    margin-bottom: 40px;
+  }
+
+  .scrolly-track {
+    height: auto;
+  }
+  .scrolly-pin {
+    position: static;
+    padding: 64px 0;
+  }
+
+  .scrolly-imgs {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    margin-top: 44px;
+  }
+  .scrolly-img {
+    margin: 0;
+    width: 100%;
+    max-width: 380px;
+  }
+  .scrolly-img .foto-wrap {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 5;
+    max-height: 42vh;
+    border: 1px solid var(--cork);
+    border-radius: var(--radius-sm);
+    background: var(--white-smoke);
+  }
+  .scrolly-img .foto-wrap :global(img) {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* antes cover — muestra la foto entera, sin recortar */
+    transition: transform 0.4s ease;
+  }
+  .scrolly-img:hover .foto-wrap :global(img) {
+    transform: scale(1.06);
+  }
+  .scrolly-img figcaption {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.03em;
+    color: var(--wood-dark);
+    padding: 10px 2px 0;
+  }
+
+  /* Disposición diagonal */
+  .scrolly-imgs .scrolly-img:nth-child(1) {
+    justify-self: start;
+    margin-top: 0;
+  }
+  .scrolly-imgs .scrolly-img:nth-child(2) {
+    justify-self: center;
+    margin-top: 70px;
+  }
+  .scrolly-imgs .scrolly-img:nth-child(3) {
+    justify-self: end;
+    margin-top: 140px;
+  }
+
+  .scrolly-img--video {
+    cursor: pointer;
+  }
+  .play-badge {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(20, 14, 10, 0.45);
+    color: var(--white-smoke);
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+  .scrolly-img--video:hover .play-badge {
+    opacity: 1;
+  }
+
+  @keyframes reveal-batido {
+    from {
+      opacity: 0;
+      transform: translateY(28px) scale(0.94);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    @media (prefers-reduced-motion: no-preference) {
+      .galeria-item {
+        animation: reveal-batido ease-out both;
+        animation-timeline: view();
+        view-timeline-inset: 20% 0%; /* retrasa el "0%" de entry */
+        animation-range: entry 0% cover 30%;
+      }
+
+      .galeria-item:nth-child(3n + 2) {
+        animation-range: entry 8% cover 38%;
+      }
+      .galeria-item:nth-child(3n) {
+        animation-range: entry 16% cover 46%;
+      }
+    }
+  }
+
+  @keyframes reveal-item-left {
+    from {
+      opacity: 0;
+      transform: translate(-36px, 50px) rotate(-3deg) scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+  }
+  @keyframes reveal-item-center {
+    from {
+      opacity: 0;
+      transform: translateY(60px) scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  @keyframes reveal-item-right {
+    from {
+      opacity: 0;
+      transform: translate(36px, 50px) rotate(3deg) scale(0.92);
+    }
+    to {
+      opacity: 1;
+      transform: translate(0, 0) rotate(0deg) scale(1);
+    }
+  }
+
+  @supports (animation-timeline: scroll()) and (animation-range: 0% 100%) {
+    @media (prefers-reduced-motion: no-preference) {
+      @media (min-width: 901px) {
+        .serv-hero {
+          min-height: 100svh;
+        }
+      }
+
+      .scrolly-track {
+        height: 480vh;
+      }
+      .scrolly-pin {
+        position: sticky;
+        top: 0;
+        height: 100vh;
+        height: 100dvh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        overflow: hidden;
+        padding: 0;
+      }
+
+      .scrolly-track--fallas {
+        view-timeline-name: --reveal-fallas;
+        view-timeline-axis: block;
+        margin-bottom: 6vh;
+      }
+      .scrolly-track--ninots {
+        view-timeline-name: --reveal-ninots;
+        view-timeline-axis: block;
+      }
+      .scrolly-track--ilustraciones {
+        view-timeline-name: --reveal-ilustraciones;
+        view-timeline-axis: block;
+      }
+
+      .scrolly-track--fallas .scrolly-img,
+      .scrolly-track--ninots .scrolly-img,
+      .scrolly-track--ilustraciones .scrolly-img {
+        animation-timing-function: linear(
+          0,
+          0.412 15.7%,
+          0.652 29.9%,
+          0.802 44.7%,
+          0.9 60.4%,
+          0.968 82%,
+          1
+        );
+        animation-fill-mode: both;
+      }
+      .scrolly-track--fallas .scrolly-img {
+        animation-timeline: --reveal-fallas;
+      }
+      .scrolly-track--ninots .scrolly-img {
+        animation-timeline: --reveal-ninots;
+      }
+      .scrolly-track--ilustraciones .scrolly-img {
+        animation-timeline: --reveal-ilustraciones;
+      }
+
+      .scrolly-imgs .scrolly-img:nth-child(1) {
+        animation-name: reveal-item-left;
+        animation-range: cover 15% cover 42%; /* antes 8% - 45% */
+      }
+      .scrolly-imgs .scrolly-img:nth-child(2) {
+        animation-name: reveal-item-center;
+        animation-range: cover 42% cover 68%; /* antes 38% - 75% */
+      }
+      .scrolly-imgs .scrolly-img:nth-child(3) {
+        animation-name: reveal-item-right;
+        animation-range: cover 68% cover 88%; /* antes 68% - 100% */
+      }
+    }
+  }
+
+  .serv-batidos {
     background: var(--wood-dark);
+  }
+  .titulo-claro {
+    color: var(--white-smoke);
+    font-size: clamp(26px, 3.4vw, 36px);
+    margin: 10px 0 14px;
+  }
+  .texto-claro {
+    color: var(--cork);
   }
   .eyebrow-light {
     color: var(--ember-light);
   }
+  .precio-nota-claro {
+    color: var(--ember-light);
+  }
+  .galeria-label {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ember-light);
+    margin-bottom: 20px;
+  }
+  .galeria-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    align-items: end;
+  }
+  .galeria-item {
+    margin: 0;
+    text-align: center;
+  }
+  .galeria-item .galeria-foto {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding: 0 12px;
+  }
+  .galeria-item :global(img) {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 340px;
+    object-fit: contain;
+    transition:
+      transform 0.3s ease,
+      filter 0.3s ease;
+  }
+  .galeria-item:hover :global(img) {
+    transform: translateY(-8px) scale(1.04);
+    filter: drop-shadow(0 16px 20px rgba(0, 0, 0, 0.35));
+  }
+  .galeria-item figcaption {
+    letter-spacing: 0.04em;
+    color: var(--cork);
+    padding: 14px 8px 0;
+    font-size: 14px;
+    transition: color 0.3s ease;
+  }
+  .galeria-item:hover figcaption {
+    color: var(--ember-light);
+  }
+
+  .serv-process {
+    background: var(--paper);
+  }
   .proc-title {
-    color: var(--white-smoke);
+    color: var(--wood-dark);
     font-size: clamp(24px, 3vw, 32px);
     margin: 10px 0 40px;
     max-width: 24ch;
@@ -172,11 +635,11 @@ const proceso = [1, 2, 3, 4].map((n) => ({
     display: block;
     font-family: var(--font-mono);
     font-size: 13px;
-    color: var(--ember-light);
+    color: var(--wood-dark);
     margin-bottom: 10px;
   }
   .step h3 {
-    color: var(--white-smoke);
+    color: var(--wood-dark);
     font-size: 19px;
     margin-bottom: 8px;
   }
@@ -198,17 +661,113 @@ const proceso = [1, 2, 3, 4].map((n) => ({
     margin-bottom: 26px;
   }
 
+  .video-modal {
+    border: none;
+    border-radius: var(--radius-sm);
+    padding: 0;
+    width: min(900px, 92vw);
+    background: var(--wood-dark);
+  }
+  .video-modal::backdrop {
+    background: rgba(0, 0, 0, 0.7);
+  }
+  .video-modal-body {
+    aspect-ratio: 16 / 9;
+  }
+  .video-modal-body :global(video),
+  .video-modal-body :global(iframe) {
+    width: 100%;
+    height: 100%;
+    border: none;
+    display: block;
+  }
+  .video-modal-close {
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    background: rgba(0, 0, 0, 0.5);
+    color: var(--white-smoke);
+    border: none;
+    border-radius: 999px;
+    width: 32px;
+    height: 32px;
+    font-size: 16px;
+    cursor: pointer;
+    z-index: 1;
+  }
+
+  @media (max-width: 900px) {
+    .scrolly-imgs,
+    .galeria-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    .scrolly-imgs .scrolly-img:nth-child(1),
+    .scrolly-imgs .scrolly-img:nth-child(2),
+    .scrolly-imgs .scrolly-img:nth-child(3) {
+      justify-self: stretch;
+      margin-top: 0;
+      max-width: none;
+    }
+
+    .scrolly-track {
+      height: auto !important;
+    }
+    .scrolly-pin {
+      position: static !important;
+      height: auto !important;
+      display: block !important;
+      overflow: visible !important;
+      padding: 40px 0;
+      will-change: transform;
+    }
+
+    .scrolly-imgs .scrolly-img {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+    }
+  }
   @media (max-width: 760px) {
     .steps {
       grid-template-columns: 1fr 1fr;
     }
-    .services li {
-      grid-template-columns: 50px 1fr;
-    }
   }
   @media (max-width: 480px) {
-    .steps {
+    .steps,
+    .scrolly-imgs,
+    .galeria-grid {
       grid-template-columns: 1fr;
     }
   }
 </style>
+
+<script>
+  const modal = document.getElementById("video-modal") as HTMLDialogElement;
+  const body = modal.querySelector(".video-modal-body")!;
+  const closeBtn = modal.querySelector(".video-modal-close")!;
+
+  function openVideo(src: string) {
+    const isYoutube = src.includes("youtube.com") || src.includes("youtu.be");
+    body.innerHTML = isYoutube
+      ? `<iframe src="${src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+      : `<video src="${src}" controls autoplay playsinline></video>`;
+    modal.showModal();
+  }
+
+  function closeVideo() {
+    modal.close();
+    body.innerHTML = "";
+  }
+
+  document.querySelectorAll(".scrolly-img--video").forEach((item) => {
+    item.addEventListener("click", () => {
+      const src = item.getAttribute("data-video");
+      if (src) openVideo(src);
+    });
+  });
+
+  closeBtn.addEventListener("click", closeVideo);
+  modal.addEventListener("click", (e) => {
+    if (e.target === modal) closeVideo();
+  });
+</script>

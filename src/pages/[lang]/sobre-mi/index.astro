@@ -1,6 +1,5 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import BurntDivider from "../../../components/BurntDivider.astro";
 import { Image } from "astro:assets";
 import fotoDani from "../../../assets/greek-dani.webp";
 import { languages } from "../../../i18n/ui";
@@ -33,8 +32,6 @@ const hitos = [
     </div>
   </section>
 
-  <BurntDivider fill="var(--paper-dark)" />
-
   <section class="section bio">
     <div class="wrap bio-grid">
       <div class="bio-copy">
@@ -56,8 +53,6 @@ const hitos = [
     </div>
   </section>
 
-  <BurntDivider fill="var(--wood-dark)" flip />
-
   <section class="section timeline">
     <div class="wrap">
       <p class="eyebrow eyebrow-light">{t("sobremi.timeline.eyebrow")}</p>
@@ -75,12 +70,12 @@ const hitos = [
     </div>
   </section>
 
-  <BurntDivider fill="var(--paper)" />
-
   <section class="section cta-simple">
     <div class="wrap cta-simple-inner">
       <h2>{t("sobremi.cta.title")}</h2>
-      <a class="btn btn-primary" href={`/${lang}/servicios/`}>{t("sobremi.cta.button")}</a>
+      <a class="btn btn-primary" href={`/${lang}/servicios/`}
+        >{t("sobremi.cta.button")}</a
+      >
     </div>
   </section>
 </Layout>

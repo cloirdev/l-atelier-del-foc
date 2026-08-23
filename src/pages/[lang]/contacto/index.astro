@@ -1,6 +1,5 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import BurntDivider from "../../../components/BurntDivider.astro";
 import { languages } from "../../../i18n/ui";
 import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
 
@@ -20,8 +19,6 @@ const t = useTranslations(lang);
       <p class="lede">{t("contacto.lede")}</p>
     </div>
   </section>
-
-  <BurntDivider fill="var(--paper-dark)" />
 
   <section class="section contact-body">
     <div class="wrap contact-grid">

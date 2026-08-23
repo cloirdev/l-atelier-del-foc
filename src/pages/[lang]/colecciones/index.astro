@@ -1,6 +1,5 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import BurntDivider from "../../../components/BurntDivider.astro";
 import FallaCard from "../../../components/FallaCard.astro";
 import { getCollection } from "astro:content";
 import { languages, defaultLang } from "../../../i18n/ui";
@@ -67,8 +66,6 @@ const anios = [...new Set(fallas.map((f) => f.entry.data.año))].sort(
       }
     </div>
   </section>
-
-  <BurntDivider fill="var(--paper-dark)" />
 
   <section class="section col-grid-section">
     <div class="wrap">

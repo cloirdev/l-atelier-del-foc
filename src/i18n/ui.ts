@@ -146,26 +146,29 @@ export const ui = {
     "serv.lede":
       "Cada encàrrec es tracta com una peça única: escala, pressupost i termini s'acorden abans de tocar el suro. Aquestes són les línies de treball habituals de l'Atelier del Foc.",
 
-    "serv.item.1.title": "Falla infantil",
-    "serv.item.1.text":
-      "Peces pensades per a casals infantils: escala reduïda, colors vius i una història que es puga explicar als xiquets.",
-    "serv.item.1.tag": "A mida · setmanes",
+    "serv.fallas.eyebrow": "Encàrrecs",
+    "serv.fallas.title": "Falles infantils",
+    "serv.fallas.text":
+      "Disseny i construcció completa de la falla infantil: esbós, escultura en suro blanc, pintura i muntatge al casal, adaptat a l'escala i el pressupost de cada comissió.",
 
-    "serv.item.2.title": "Ninot individual",
-    "serv.item.2.text":
-      "Figures soltes per a exposició, indult o regal. Ideal per a encàrrecs particulars o col·leccionisme faller.",
-    "serv.item.2.tag": "Des d'una figura",
+    "serv.ninots.eyebrow": "Encàrrecs",
+    "serv.ninots.title": "Ninots personalitzats",
+    "serv.ninots.text":
+      "Figures individuals a mida, pensades per a exposició, indult, regal o peça de col·lecció: tu tries el personatge, l'escala i l'actitud.",
 
-    "serv.item.3.title": "Falla gran",
-    "serv.item.3.text":
-      "Disseny i execució completa: esbós, escultura en suro blanc i ferralla, pintura i muntatge al carrer o casal.",
-    "serv.item.3.tag": "A mida · diverses setmanes",
+    "serv.batidos.eyebrow": "Encàrrecs",
+    "serv.batidos.title": "Batuts personalitzats en 3D",
+    "serv.batidos.text":
+      "Rèpliques en miniatura impreses i pintades a mà: el teu batut favorit convertit en ninot de sobretaula, amb guinyades falleres o el tema que trie'ixes.",
+    "serv.batidos.galeria.title": "Alguns batuts que hem fet",
 
-    "serv.item.4.title": "Restauració i repintat",
-    "serv.item.4.text":
-      "Recuperació de ninots antics o peces danyades: reforç d'armadura, resina i repintat d'acabats.",
-    "serv.item.4.tag": "Segons l'estat de la peça",
+    "serv.ilustraciones.eyebrow": "Encàrrecs",
+    "serv.ilustraciones.title": "Il·lustracions: cartells, pòsters i làmines",
+    "serv.ilustraciones.text":
+      "Disseny i il·lustració impresa per a cartells de falla, pòsters de comissió o làmines decoratives, amb el mateix estil satíric i colorista del taller.",
 
+    "serv.precio.nota":
+      "El preu de cada encàrrec s'acorda amb el client segons escala, terminis i acabats.",
     "serv.proc.eyebrow": "Com funciona un encàrrec",
     "serv.proc.title": "De la primera conversa a l'entrega",
 
@@ -331,26 +334,29 @@ export const ui = {
     "serv.lede":
       "Cada encargo se trata como una pieza única: escala, presupuesto y plazo se acuerdan antes de tocar el corcho. Estas son las líneas de trabajo habituales de l'Atelier del Foc.",
 
-    "serv.item.1.title": "Falla infantil",
-    "serv.item.1.text":
-      "Piezas pensadas para casals infantiles: escala reducida, colores vivos y una historia que se pueda explicar a los peques.",
-    "serv.item.1.tag": "A medida · semanas",
+    "serv.fallas.eyebrow": "Encargos",
+    "serv.fallas.title": "Fallas infantiles",
+    "serv.fallas.text":
+      "Diseño y construcción completa de la falla infantil: boceto, escultura en corcho blanco, pintura y montaje en el casal, adaptado a la escala y el presupuesto de cada comisión.",
 
-    "serv.item.2.title": "Ninot individual",
-    "serv.item.2.text":
-      "Figuras sueltas para exposición, indulto o regalo. Ideal para encargos particulares o coleccionismo fallero.",
-    "serv.item.2.tag": "Desde una figura",
+    "serv.ninots.eyebrow": "Encargos",
+    "serv.ninots.title": "Ninots personalizados",
+    "serv.ninots.text":
+      "Figuras individuales a medida, pensadas para exposición, indulto, regalo o pieza de colección: tú eliges el personaje, la escala y la actitud.",
 
-    "serv.item.3.title": "Falla grande",
-    "serv.item.3.text":
-      "Diseño y ejecución completa: boceto, escultura en corcho blanco y ferralla, pintura y montaje en calle o casal.",
-    "serv.item.3.tag": "A medida · varias semanas",
+    "serv.batidos.eyebrow": "Encargos",
+    "serv.batidos.title": "Batidos personalizados en 3D",
+    "serv.batidos.text":
+      "Réplicas en miniatura impresas y pintadas a mano: tu batido favorito convertido en ninot de sobremesa, con guiños falleros o el tema que elijas.",
+    "serv.batidos.galeria.title": "Algunos batidos que hemos hecho",
 
-    "serv.item.4.title": "Restauración y repintado",
-    "serv.item.4.text":
-      "Recuperación de ninots antiguos o piezas dañadas: refuerzo de armazón, resina y repintado de acabados.",
-    "serv.item.4.tag": "Según estado de la pieza",
+    "serv.ilustraciones.eyebrow": "Encargos",
+    "serv.ilustraciones.title": "Ilustraciones: carteles, pósters y láminas",
+    "serv.ilustraciones.text":
+      "Diseño e ilustración impresa para carteles de falla, pósters de comisión o láminas decorativas, con el mismo estilo satírico y colorista del taller.",
 
+    "serv.precio.nota":
+      "El precio de cada encargo se acuerda con el cliente según escala, plazos y acabados.",
     "serv.proc.eyebrow": "Cómo funciona un encargo",
     "serv.proc.title": "De la primera conversación a la entrega",
 

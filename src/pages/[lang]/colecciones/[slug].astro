@@ -1,6 +1,5 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
-import BurntDivider from "../../../components/BurntDivider.astro";
 import { getCollection, render } from "astro:content";
 import { Image } from "astro:assets";
 import { languages, defaultLang } from "../../../i18n/ui";
@@ -100,8 +99,6 @@ const { Content } = await render(falla);
       </dl>
     </div>
   </section>
-
-  <BurntDivider fill="var(--paper-dark)" />
 
   <section class="section ficha-body">
     <div class="wrap prose">
