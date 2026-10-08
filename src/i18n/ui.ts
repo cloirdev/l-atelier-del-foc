@@ -9,11 +9,11 @@ export const ui = {
   va: {
     "nav.inicio": "Inici",
     "nav.sobre-mi": "Sobre Mi",
-    "nav.colecciones": "Col·leccions",
-    "nav.servicios": "Serveis",
+    "nav.fallas": "Falles",
+    "nav.taller": "Taller",
     "nav.contacto": "Contacte",
 
-    "col.title": "Obres",
+    "fall.title": "Obres",
     "col.filtro.todos": "Tots",
     "col.lede":
       "El registre de les falles, ninots i peces que ha firmat Dani al llarg dels anys: edició, lema, secció i premis de cadascuna.",
@@ -42,24 +42,10 @@ export const ui = {
 
     "home.about.eyebrow": "L'artista",
     "home.about.title": "Onze mesos de banc de treball per una nit de foc.",
+    "home.about.imgAlt": "Dani al taller",
     "home.about.text":
       "Dani porta més d'una dècada esculpint ninots en suro blanc i cartó pedra, combinant la sàtira tradicional fallera amb formes i color contemporanis. Cada encàrrec comença amb una conversa i acaba, com mana la tradició, cremant en la cremà.",
     "home.about.cta": "Conèixer a Dani →",
-
-    "home.process.eyebrow": "Com es fa una falla",
-    "home.process.title": "Del paper al foc, en quatre fases",
-    "home.process.step1.label": "Boceto",
-    "home.process.step1.text":
-      "Cada falla naix en paper: idea, crítica i proporció abans de tocar el suro.",
-    "home.process.step2.label": "Escultura",
-    "home.process.step2.text":
-      "Suro blanc, cartó pedra i ferralla prenen volum al taller, peça a peça.",
-    "home.process.step3.label": "Pintura",
-    "home.process.step3.text":
-      "Color, textura i acabat: el moment en què el ninot pren caràcter.",
-    "home.process.step4.label": "Cremà",
-    "home.process.step4.text":
-      "La nit del foc. Allò que es va construir tot l'any crema en minuts, i torna a començar.",
 
     "home.gallery.eyebrow": "Treball recent",
     "home.gallery.title": "Algunes peces del taller",
@@ -70,6 +56,23 @@ export const ui = {
     "home.gallery.piece2.caption": "Ninot individual · 2023",
     "home.gallery.piece3.label": "Casal infantil",
     "home.gallery.piece3.caption": "Falla infantil · 2024",
+
+    "home.services.eyebrow": "Serveis",
+    "home.services.title": "De l'esbós a la plantà",
+    "home.services.cta": "Demanar pressupost",
+    "home.services.more": "Saber més",
+    "home.services.fallas.title": "Falles",
+    "home.services.fallas.text":
+      "Monuments infantils i majors: disseny, construcció i plantà, adaptats a cada comissió.",
+    "home.services.ninots.title": "Ninots",
+    "home.services.ninots.text":
+      "Figures personalitzades per a regalar, indultar o recordar un moment especial.",
+    "home.services.escultura3d.title": "Escultura 3D",
+    "home.services.escultura3d.text":
+      "Peces modelades i impreses en 3D, de l'esbós digital a la figura acabada i pintada.",
+    "home.services.carteles.title": "Cartells",
+    "home.services.carteles.text":
+      "Il·lustració de cartells i portades per a falles, esdeveniments i celebracions.",
 
     "home.cta.title": "Tens una idea per a la teua falla?",
     "home.cta.text":
@@ -196,8 +199,8 @@ export const ui = {
   es: {
     "nav.inicio": "Inicio",
     "nav.sobre-mi": "Sobre Mí",
-    "nav.colecciones": "Colecciones",
-    "nav.servicios": "Servicios",
+    "nav.fallas": "Fallas",
+    "nav.taller": "Taller",
     "nav.contacto": "Contacto",
 
     "col.title": "Obras",
@@ -227,27 +230,30 @@ export const ui = {
     "home.hero.cta.encargar": "Encargar una pieza",
     "home.hero.cta.galeria": "Ver la galería",
 
+    "home.services.eyebrow": "Servicios",
+    "home.services.title": "Del boceto a la plantà",
+    "home.services.cta": "Pedir presupuesto",
+    "home.services.more": "Saber más",
+    "home.services.fallas.title": "Fallas",
+    "home.services.fallas.text":
+      "Monumentos infantiles y mayores: diseño, construcción y plantà, adaptados a cada comisión.",
+    "home.services.ninots.title": "Ninots",
+    "home.services.ninots.text":
+      "Figuras personalizadas para regalar, indultar o recordar un momento especial.",
+    "home.services.escultura3d.title": "Escultura 3D",
+    "home.services.escultura3d.text":
+      "Piezas modeladas e impresas en 3D, del boceto digital a la figura acabada y pintada.",
+    "home.services.carteles.title": "Carteles",
+    "home.services.carteles.text":
+      "Ilustración de carteles y portadas para fallas, eventos y celebraciones.",
+
     "home.about.eyebrow": "El artista",
     "home.about.title":
       "Once meses de banco de trabajo por una noche de fuego.",
+    "home.about.imgAlt": "Dani en el taller",
     "home.about.text":
       "Dani lleva más de una década esculpiendo ninots en corcho blanco y cartón piedra, combinando la sátira tradicional fallera con formas y color contemporáneos. Cada encargo empieza con una conversación y termina, como manda la tradición, ardiendo en la cremà.",
     "home.about.cta": "Conocer a Dani →",
-
-    "home.process.eyebrow": "Cómo se hace una falla",
-    "home.process.title": "Del papel al fuego, en cuatro fases",
-    "home.process.step1.label": "Boceto",
-    "home.process.step1.text":
-      "Cada falla nace en papel: idea, crítica y proporción antes de tocar el corcho.",
-    "home.process.step2.label": "Escultura",
-    "home.process.step2.text":
-      "Corcho blanco, cartón piedra y ferralla toman volumen en el taller, pieza a pieza.",
-    "home.process.step3.label": "Pintura",
-    "home.process.step3.text":
-      "Color, textura y acabado: el momento en que el ninot cobra carácter.",
-    "home.process.step4.label": "Cremà",
-    "home.process.step4.text":
-      "La noche del fuego. Lo que se construyó todo el año arde en minutos, y empieza de nuevo.",
 
     "home.gallery.eyebrow": "Trabajo reciente",
     "home.gallery.title": "Algunas piezas del taller",

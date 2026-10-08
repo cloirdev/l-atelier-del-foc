@@ -31,10 +31,16 @@ const fallas = Array.from(bySlug.entries())
     slug,
     entry: versions[lang] ?? versions[defaultLang],
   }))
+  .filter(
+    (item): item is { slug: string; entry: NonNullable<typeof item.entry> } => {
+      // Descartar entradas que no tengan versión en ningún idioma válido
+      return item.entry !== undefined && item.entry.data !== undefined;
+    },
+  )
   .sort(
     (a, b) =>
-      b.entry.data.año - a.entry.data.año ||
-      a.entry.data.falla.localeCompare(b.entry.data.falla),
+      (b.entry.data.año ?? 0) - (a.entry.data.año ?? 0) ||
+      (a.entry.data.falla ?? "").localeCompare(b.entry.data.falla ?? ""),
   );
 
 const anios = [...new Set(fallas.map((f) => f.entry.data.año))].sort(
@@ -76,17 +82,11 @@ const anios = [...new Set(fallas.map((f) => f.entry.data.año))].sort(
           <div class="col-grid" id="col-grid">
             {fallas.map(({ slug, entry: f }) => (
               <div class="col-item" data-year={f.data.año}>
-                <a href={`/${lang}/colecciones/${slug}/`} class="col-item-link">
-                  <FallaCard
-                    falla={f.data.falla}
-                    año={f.data.año}
-                    lema={f.data.lema}
-                    seccion={f.data.seccion}
-                    casal={f.data.casal}
-                    premios={f.data.premios}
-                    foto={f.data.foto}
-                  />
-                </a>
+                <FallaCard
+                  falla={f.data}
+                  href={`/${lang}/fallas/${slug}/`}
+                  sizes="(max-width: 560px) 100vw, (max-width: 900px) 50vw, 33vw"
+                />
               </div>
             ))}
           </div>
@@ -147,7 +147,7 @@ const anios = [...new Set(fallas.map((f) => f.entry.data.año))].sort(
   }
   .col-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 26px;
   }
   .col-item-link {

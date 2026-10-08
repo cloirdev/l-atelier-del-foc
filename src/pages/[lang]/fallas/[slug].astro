@@ -45,7 +45,7 @@ const { Content } = await render(falla);
 >
   <section class="ficha-hero">
     <div class="wrap">
-      <a href={`/${lang}/colecciones/`} class="volver">
+      <a href={`/${lang}/fallas/`} class="volver">
         <span aria-hidden="true">←</span>
         {t("falla.volver")}
       </a>
@@ -62,8 +62,9 @@ const { Content } = await render(falla);
             <Image
               src={foto}
               alt={`Falla ${nombre}, ${año}`}
-              width={1120}
-              height={700}
+              widths={[640, 960, 1120]}
+              sizes="(max-width: 820px) 100vw, 780px"
+              loading="eager"
             />
           </div>
         )
@@ -175,7 +176,8 @@ const { Content } = await render(falla);
     padding: 6px;
     background: var(--white-smoke);
   }
-  .ficha-foto img {
+  .ficha-foto :global(img) {
+    display: block;
     border-radius: 2px;
     width: 100%;
     height: auto;

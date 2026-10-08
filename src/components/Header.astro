@@ -2,6 +2,7 @@
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 import Logo from "../assets/logo.svg";
 import LanguageSwitcher from "./LanguageSwitcher.astro";
+import "@fontsource-variable/bricolage-grotesque";
 
 const { pathname } = Astro.url;
 const currentLang = getLangFromUrl(Astro.url);
@@ -9,8 +10,8 @@ const t = useTranslations(currentLang);
 
 const links = [
   { href: `/${currentLang}/sobre-mi/`, label: t("nav.sobre-mi") },
-  { href: `/${currentLang}/colecciones/`, label: t("nav.colecciones") },
-  { href: `/${currentLang}/servicios/`, label: t("nav.servicios") },
+  { href: `/${currentLang}/fallas/`, label: t("nav.fallas") },
+  { href: `/${currentLang}/taller/`, label: t("nav.taller") },
   { href: `/${currentLang}/contacto/`, label: t("nav.contacto") },
 ];
 ---
@@ -23,9 +24,7 @@ const links = [
       aria-label="L'Atelier del Foc, inicio"
     >
       <Logo />
-      <span>
-        <strong>L'Atelier</strong> del Foc
-      </span>
+      <span class="header-title"> <strong>l'atelier</strong> del foc</span>
     </a>
 
     <input type="checkbox" id="nav-toggle" class="nav-toggle" />
@@ -57,6 +56,10 @@ const links = [
   </div>
 </header>
 <style>
+  .header-title {
+    font-family: "Bricolage Grotesque Variable", system-ui, sans-serif;
+  }
+
   .site-header {
     background: var(--wood-dark);
     position: sticky;

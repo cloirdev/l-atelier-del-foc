@@ -5,7 +5,7 @@ lema: "Hot´N Cold"
 seccion: "8ª"
 premios:
   - "Sección: 9º"
-foto: ./2023_trinidad-alboraya__infantil.jpg
+foto: "@/assets/fallas/2023_trinidad-alboraya_infantil.webp"
 ---
 
 Falla infantil con el lema "Hot´N Cold" plantada en el año 2023 por el artista Daniel López Iglesias (L'Atelier del Foc) para la comisión Trinidad - Alboraya Infantil.

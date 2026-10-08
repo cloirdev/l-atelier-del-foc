@@ -4,7 +4,7 @@ año: 2026
 lema: "Mare Nostrum"
 seccion: "6ª"
 premios: []
-foto: ./2026-san-luis-dr-waksman.jpg
+foto: "@/assets/fallas/2026_san-luis_infantil.jpg"
 ---
 
 Figura individual presentada a l'Exposició del Ninot: un rellotger mirant un rellotge parat,
