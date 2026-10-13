@@ -30,14 +30,18 @@ export function getStaticPaths() {
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const isVa = lang === "va";
+const verProceso = isVa ? "Veure el procés" : "Ver proceso";
 
+/* ---------- Datos ---------- */
 const proceso = [1, 2, 3, 4].map((n) => ({
   n: String(n).padStart(2, "0"),
   label: t(`serv.proc.${n}.label` as any),
   text: t(`serv.proc.${n}.text` as any),
 }));
 
-const fallasData = [
+type Item = { img: ImageMetadata; es: string; va: string; video?: string };
+
+const fallasData: Item[] = [
   {
     img: falla1,
     es: "Falla infantil, casal Sevilla-Denia",
@@ -55,7 +59,7 @@ const fallasData = [
   },
 ];
 
-const ninotsData = [
+const ninotsData: Item[] = [
   {
     img: ninot1,
     es: "Ninot individual, encargo particular",
@@ -73,7 +77,7 @@ const ninotsData = [
   },
 ];
 
-const batidosData = [
+const batidosData: Item[] = [
   { img: batidoFallero, es: "Batido Fallero", va: "Batut Faller" },
   { img: batidoFontanero, es: "Batido Fontanero", va: "Batut Fontaner" },
   { img: batidoIndigena, es: "Batido Indígena", va: "Batut Indígena" },
@@ -82,7 +86,7 @@ const batidosData = [
   { img: batidoRojo, es: "Batido Rojo", va: "Batut Roig" },
 ];
 
-const ilustracionesData = [
+const ilustracionesData: Item[] = [
   {
     img: poster1,
     es: "Cartel de falla",
@@ -93,169 +97,149 @@ const ilustracionesData = [
   { img: poster2, es: "Póster de comisión", va: "Pòster de comissió" },
 ];
 
-const fallas = fallasData.map((f) => ({
-  title: isVa ? f.va : f.es,
-  img: f.img,
-}));
-const ninots = ninotsData.map((n) => ({
-  title: isVa ? n.va : n.es,
-  img: n.img,
-}));
-const batidos = batidosData.map((b) => ({
-  title: isVa ? b.va : b.es,
-  img: b.img,
-}));
-const ilustraciones = ilustracionesData.map((i) => ({
-  title: isVa ? i.va : i.es,
-  img: i.img,
-  video: i.video ?? null,
+const toItems = (data: Item[]) =>
+  data.map((d) => ({
+    title: isVa ? d.va : d.es,
+    img: d.img,
+    video: d.video ?? null,
+  }));
+
+/* Tamaños de imagen según el tipo de galería */
+const imgCfg = {
+  bento: { widths: [480, 720, 960], sizes: "(max-width: 900px) 92vw, 460px" },
+  baraja: {
+    widths: [480, 720, 960, 1200],
+    sizes: "(max-width: 900px) 80vw, 500px",
+  },
+  float: {
+    widths: [320, 480, 640, 800],
+    sizes: "(max-width: 900px) 45vw, 340px",
+  },
+} as const;
+
+const secciones = [
+  { id: "fallas", layout: "baraja", tono: "paper", items: toItems(fallasData) },
+  { id: "ninots", layout: "baraja", tono: "sand", items: toItems(ninotsData) },
+  {
+    id: "batidos",
+    layout: "float",
+    tono: "oscuro",
+    items: toItems(batidosData),
+  },
+  {
+    id: "ilustraciones",
+    layout: "baraja",
+    tono: "paper",
+    items: toItems(ilustracionesData),
+  },
+].map((s, i) => ({
+  ...s,
+  n: String(i + 1).padStart(2, "0"),
+  title: t(`serv.${s.id}.title` as any),
+  text: t(`serv.${s.id}.text` as any),
+  invertido: i % 2 === 1 && s.layout !== "float",
+  cfg: imgCfg[s.layout as keyof typeof imgCfg],
 }));
 ---
 
 <Layout title={t("serv.title")} description={t("serv.lede")}>
+  <!-- ============ HERO ============ -->
   <section class="serv-hero">
     <div class="wrap">
-      <p class="eyebrow">{t("serv.eyebrow")}</p>
       <h1>{t("serv.title")}</h1>
       <p class="lede">{t("serv.lede")}</p>
-    </div>
-  </section>
 
-  <!-- Fallas infantiles -->
-  <section class="scrolly bloque-a">
-    <div class="scrolly-track scrolly-track--fallas">
-      <div class="scrolly-pin">
-        <div class="wrap">
-          <p class="eyebrow">{t("serv.fallas.eyebrow")}</p>
-          <h2>{t("serv.fallas.title")}</h2>
-          <p class="bloque-text">{t("serv.fallas.text")}</p>
-          <p class="precio-nota">{t("serv.precio.nota")}</p>
-          <div class="scrolly-imgs">
-            {
-              fallas.map((f) => (
-                <figure class="scrolly-img">
-                  <div class="foto-wrap">
-                    <Image
-                      src={f.img}
-                      alt={f.title}
-                      width={500}
-                      format="webp"
-                    />
-                  </div>
-                  <figcaption>{f.title}</figcaption>
-                </figure>
-              ))
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Ninots personalizados -->
-  <section class="scrolly bloque-b">
-    <div class="scrolly-track scrolly-track--ninots">
-      <div class="scrolly-pin">
-        <div class="wrap">
-          <p class="eyebrow">{t("serv.ninots.eyebrow")}</p>
-          <h2>{t("serv.ninots.title")}</h2>
-          <p class="bloque-text">{t("serv.ninots.text")}</p>
-          <p class="precio-nota">{t("serv.precio.nota")}</p>
-          <div class="scrolly-imgs">
-            {
-              ninots.map((n) => (
-                <figure class="scrolly-img">
-                  <div class="foto-wrap">
-                    <Image
-                      src={n.img}
-                      alt={n.title}
-                      width={500}
-                      format="webp"
-                    />
-                  </div>
-                  <figcaption>{n.title}</figcaption>
-                </figure>
-              ))
-            }
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Batidos personalizados en 3D -->
-  <section class="section serv-batidos">
-    <div class="wrap">
-      <p class="eyebrow eyebrow-light">{t("serv.batidos.eyebrow")}</p>
-      <h2 class="titulo-claro">{t("serv.batidos.title")}</h2>
-      <p class="bloque-text texto-claro">{t("serv.batidos.text")}</p>
-      <p class="precio-nota precio-nota-claro">{t("serv.precio.nota")}</p>
-
-      <p class="galeria-label">{t("serv.batidos.galeria.title")}</p>
-      <div class="galeria-grid">
+      <nav class="chips" aria-label={t("serv.title")}>
         {
-          batidos.map((b) => (
-            <figure class="galeria-item">
-              <div class="galeria-foto">
-                <Image src={b.img} alt={b.title} width={640} format="webp" />
-              </div>
-              <figcaption>{b.title}</figcaption>
-            </figure>
+          secciones.map((s) => (
+            <a href={`#${s.id}`}>
+              <span>{s.n}</span>
+              {s.title}
+            </a>
           ))
         }
-      </div>
+      </nav>
     </div>
   </section>
 
-  <!-- Ilustraciones -->
-  <section class="scrolly bloque-a">
-    <div class="scrolly-track scrolly-track--ilustraciones">
-      <div class="scrolly-pin">
-        <div class="wrap">
-          <p class="eyebrow">{t("serv.ilustraciones.eyebrow")}</p>
-          <h2>{t("serv.ilustraciones.title")}</h2>
-          <p class="bloque-text">{t("serv.ilustraciones.text")}</p>
-          <p class="precio-nota">{t("serv.precio.nota")}</p>
-          <div class="scrolly-imgs">
-            {
-              ilustraciones.map((it) => (
-                <figure
-                  class:list={["scrolly-img", it.video && "scrolly-img--video"]}
-                  data-video={it.video ?? undefined}
-                >
-                  <div class="foto-wrap">
-                    <Image
-                      src={it.img}
-                      alt={it.title}
-                      width={500}
-                      format="webp"
-                    />
-                    {it.video && (
-                      <span class="play-badge" aria-hidden="true">
-                        ▶ Ver proceso
+  <!-- ============ SERVICIOS ============ -->
+  {
+    secciones.map((s) => (
+      <section
+        id={s.id}
+        class={`servicio servicio--${s.tono}${s.invertido ? " servicio--invertido" : ""}`}
+      >
+        <div
+          class={`wrap servicio-grid${s.layout === "float" ? " servicio-grid--arriba" : ""}`}
+        >
+          <div class="servicio-texto">
+            <span class="num" aria-hidden="true">
+              {s.n}
+            </span>
+            <h2>{s.title}</h2>
+            <p class="texto">{s.text}</p>
+            <p class="precio-nota">{t("serv.precio.nota")}</p>
+            <a class="enlace" href={`/${lang}/contacto/`}>
+              {t("serv.cta.button")} →
+            </a>
+          </div>
+
+          <div class="servicio-galeria">
+            {s.layout === "float" && (
+              <p class="galeria-label">{t("serv.batidos.galeria.title")}</p>
+            )}
+            <div class={`galeria galeria--${s.layout}`}>
+              {s.items.map((it) => (
+                <figure class="media">
+                  {it.video ? (
+                    <div class="marco marco-video">
+                      <Image
+                        src={it.img}
+                        alt={it.title}
+                        widths={s.cfg.widths as unknown as number[]}
+                        sizes={s.cfg.sizes}
+                        format="webp"
+                        loading="lazy"
+                      />
+                      <video
+                        class="hover-video"
+                        src={it.video}
+                        muted
+                        loop
+                        playsinline
+                        preload="metadata"
+                        aria-hidden="true"
+                        tabindex="-1"
+                      />
+                      <span class="play" aria-hidden="true">
+                        ▶ {verProceso}
                       </span>
-                    )}
-                  </div>
+                    </div>
+                  ) : (
+                    <div class="marco">
+                      <Image
+                        src={it.img}
+                        alt={it.title}
+                        widths={s.cfg.widths as unknown as number[]}
+                        sizes={s.cfg.sizes}
+                        format="webp"
+                        loading="lazy"
+                      />
+                    </div>
+                  )}
                   <figcaption>{it.title}</figcaption>
                 </figure>
-              ))
-            }
+              ))}
+            </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
+      </section>
+    ))
+  }
 
-  <dialog id="video-modal" class="video-modal">
-    <button type="button" class="video-modal-close" aria-label="Cerrar"
-      >✕</button
-    >
-    <div class="video-modal-body"></div>
-  </dialog>
-
-  <section class="section serv-process">
+  <!-- ============ PROCESO ============ -->
+  <section class="section proceso">
     <div class="wrap">
-      <p class="eyebrow eyebrow-light">{t("serv.proc.eyebrow")}</p>
       <h2 class="proc-title">{t("serv.proc.title")}</h2>
       <ol class="steps">
         {
@@ -271,353 +255,658 @@ const ilustraciones = ilustracionesData.map((i) => ({
     </div>
   </section>
 
-  <section class="section cta-simple">
-    <div class="wrap cta-simple-inner">
+  <!-- ============ CTA ============ -->
+  <section class="section cta">
+    <div class="wrap cta-inner">
       <h2>{t("serv.cta.title")}</h2>
       <p>{t("serv.cta.text")}</p>
-      <a class="btn btn-primary" href={`/${lang}/contacto/`}
-        >{t("serv.cta.button")}</a
-      >
+      <a class="btn btn-primary" href={`/${lang}/contacto/`}>
+        {t("serv.cta.button")}
+      </a>
     </div>
   </section>
 </Layout>
 
+<script>
+  /* ---------- Barajas (ninots e ilustraciones) ---------- */
+  const INTERVALO_MS = 4500; // tiempo entre cartas (en milisegundos)
+  const TRANSICION_MS = 720; // duración de la salida de la carta
+  const textoSiguiente =
+    document.documentElement.lang === "va" ? "Següent" : "Siguiente";
+
+  document
+    .querySelectorAll<HTMLElement>(".galeria--baraja")
+    .forEach((baraja) => {
+      const cartas = Array.from(baraja.querySelectorAll<HTMLElement>(".media"));
+      if (cartas.length < 2) return;
+
+      let orden = [...cartas];
+      let animando = false;
+      let visible = false;
+      let encima = false;
+      let timer: number | undefined;
+
+      const colocar = () =>
+        orden.forEach((c, i) => c.style.setProperty("--pos", String(i)));
+
+      // Cartas con vídeo: reproducir / detener (solo suena la de delante)
+      const videos = new Map<
+        HTMLElement,
+        { reproducir: () => void; detener: () => void; activo: () => boolean }
+      >();
+
+      /* Controles: puntos + botón siguiente */
+      const ctrl = document.createElement("div");
+      ctrl.className = "baraja-ctrl";
+      const puntos = document.createElement("div");
+      puntos.className = "baraja-dots";
+      puntos.setAttribute("aria-hidden", "true");
+      cartas.forEach(() => puntos.appendChild(document.createElement("span")));
+      const sig = document.createElement("button");
+      sig.type = "button";
+      sig.className = "baraja-next";
+      sig.textContent = "→";
+      sig.setAttribute("aria-label", textoSiguiente);
+      ctrl.append(puntos, sig);
+      baraja.after(ctrl);
+
+      const marcarPuntos = () => {
+        const idx = cartas.indexOf(orden[0]);
+        puntos
+          .querySelectorAll("span")
+          .forEach((p, i) => p.classList.toggle("on", i === idx));
+      };
+
+      const siguiente = () => {
+        if (animando) return;
+        animando = true;
+        const frente = orden[0];
+        videos.get(frente)?.detener();
+        frente.classList.add("sale");
+        orden = orden.slice(1);
+        colocar();
+        marcarPuntos();
+        setTimeout(() => {
+          // La carta vuelve al fondo de la baraja sin animar el regreso
+          frente.classList.add("sin-trans");
+          frente.classList.remove("sale");
+          orden.push(frente);
+          frente.style.setProperty("--pos", String(orden.length - 1));
+          void frente.offsetWidth;
+          frente.classList.remove("sin-trans");
+          animando = false;
+          // Si el ratón ya estaba sobre la nueva carta de delante, arranca su vídeo
+          if (orden[0].matches(":hover")) videos.get(orden[0])?.reproducir();
+        }, TRANSICION_MS);
+      };
+
+      const reducido = matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const parar = () => {
+        clearInterval(timer);
+        timer = undefined;
+      };
+      const arrancar = () => {
+        parar();
+        if (reducido || !visible || encima) return;
+        timer = window.setInterval(siguiente, INTERVALO_MS);
+      };
+
+      const tactil = matchMedia("(hover: none)").matches;
+
+      cartas.forEach((c) => {
+        const marco = c.querySelector<HTMLElement>(".marco-video");
+        const video = c.querySelector<HTMLVideoElement>(".hover-video");
+
+        if (marco && video) {
+          const reproducir = () => {
+            if (c !== orden[0]) return;
+            video
+              .play()
+              .then(() => marco.classList.add("reproduciendo"))
+              .catch(() => {});
+          };
+          const detener = () => {
+            video.pause();
+            video.currentTime = 0;
+            marco.classList.remove("reproduciendo");
+          };
+          videos.set(c, {
+            reproducir,
+            detener,
+            activo: () => marco.classList.contains("reproduciendo"),
+          });
+          c.addEventListener("mouseenter", reproducir);
+          c.addEventListener("mouseleave", detener);
+        }
+
+        c.addEventListener("click", () => {
+          const v = videos.get(c);
+          // En pantallas táctiles no hay hover: tocar la carta con vídeo lo activa
+          if (tactil && v && c === orden[0]) {
+            if (v.activo()) v.detener();
+            else v.reproducir();
+            return;
+          }
+          siguiente();
+          arrancar();
+        });
+      });
+      sig.addEventListener("click", () => {
+        siguiente();
+        arrancar();
+      });
+
+      // Pausa al pasar el ratón por encima y cuando no está en pantalla
+      baraja.addEventListener("mouseenter", () => {
+        encima = true;
+        parar();
+      });
+      baraja.addEventListener("mouseleave", () => {
+        encima = false;
+        arrancar();
+      });
+      new IntersectionObserver(
+        ([e]) => {
+          visible = e.isIntersecting;
+          arrancar();
+        },
+        { threshold: 0.35 },
+      ).observe(baraja);
+
+      colocar();
+      marcarPuntos();
+    });
+</script>
+
 <style>
-  .serv-hero {
-    background: var(--paper);
-    padding: 64px 0 52px;
-    display: flex;
-    align-items: center;
-  }
-  h1 {
-    font-size: clamp(38px, 5vw, 56px);
-    margin: 10px 0 18px;
-  }
-  .lede {
-    font-size: 17px;
-    color: var(--wood-dark);
-    max-width: 62ch;
+  .serv-hero,
+  .servicio--oscuro,
+  .cta {
+    --oscuro-rgb: 27 19 13;
+    --oscuro: rgb(var(--oscuro-rgb));
   }
 
-  .bloque-a {
+  .wrap {
+    max-width: 1240px;
+  }
+
+  .serv-hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--oscuro);
+    color: var(--paper);
+    padding: clamp(72px, 10vw, 140px) 0 clamp(56px, 7vw, 96px);
+  }
+  .serv-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(
+        60% 90% at 88% 0%,
+        color-mix(in srgb, var(--ember) 38%, transparent),
+        transparent 70%
+      ),
+      radial-gradient(
+        40% 60% at 0% 100%,
+        color-mix(in srgb, var(--ember) 14%, transparent),
+        transparent 70%
+      );
+  }
+  .serv-hero h1 {
+    font-size: clamp(44px, 8vw, 112px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: #fff;
+    max-width: 12ch;
+    margin: 14px 0 24px;
+    text-wrap: balance;
+  }
+  .serv-hero .lede {
+    font-size: clamp(17px, 1.6vw, 20px);
+    line-height: 1.6;
+    color: rgb(255 255 255 / 0.75);
+    max-width: 58ch;
+  }
+
+  .chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 44px;
+  }
+  .chips a {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 18px;
+    border: 1px solid rgb(255 255 255 / 0.25);
+    border-radius: 999px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    color: #fff;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease;
+  }
+  .chips a span {
+    color: var(--ember);
+    transition: color 0.2s ease;
+  }
+  .chips a:hover {
+    background: var(--ember);
+    border-color: var(--ember);
+  }
+  .chips a:hover span {
+    color: #fff;
+  }
+
+  /* =========================================================
+     SECCIONES DE SERVICIO
+     ========================================================= */
+  .servicio {
+    padding: clamp(64px, 9vw, 120px) 0;
+  }
+  .servicio--paper {
+    background: var(--paper);
+  }
+  .servicio--sand {
     background: var(--paper-dark);
   }
-  .bloque-b {
-    background: var(--paper);
+  .servicio--oscuro {
+    background: var(--oscuro);
+    color: var(--paper);
   }
 
-  .scrolly h2 {
-    font-size: clamp(26px, 3.4vw, 36px);
-    margin: 10px 0 14px;
+  .servicio-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+    gap: clamp(40px, 6vw, 88px);
+    align-items: start;
   }
-  .bloque-text {
-    color: var(--wood-dark);
+  .servicio--invertido .servicio-texto {
+    order: 2;
+  }
+  /* Variante con el texto arriba y la galería debajo a todo el ancho */
+  .servicio-grid--arriba {
+    grid-template-columns: 1fr;
+    gap: 56px;
+  }
+  .servicio-grid--arriba .servicio-texto {
+    position: static;
     max-width: 62ch;
-    font-size: 16px;
-    line-height: 1.6;
-    margin-bottom: 10px;
+  }
+
+  .num {
+    display: block;
+    font-family: var(--font-display);
+    font-size: clamp(64px, 9vw, 120px);
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--ember);
+    margin-bottom: 22px;
+  }
+  .servicio-texto h2 {
+    font-size: clamp(30px, 4vw, 48px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 10px 0 18px;
+  }
+  .texto {
+    color: var(--wood-dark);
+    font-size: 17px;
+    line-height: 1.65;
+    max-width: 48ch;
+    margin: 0;
   }
   .precio-nota {
     font-family: var(--font-mono);
     font-size: 12.5px;
     letter-spacing: 0.03em;
     color: var(--ember);
-    margin-bottom: 40px;
+    margin: 22px 0 24px;
+  }
+  .enlace {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.04em;
+    color: var(--wood-dark);
+    padding-bottom: 3px;
+    border-bottom: 1px solid var(--ember);
+    transition:
+      color 0.2s ease,
+      letter-spacing 0.2s ease;
+  }
+  .enlace:hover {
+    color: var(--ember);
+    letter-spacing: 0.07em;
   }
 
-  .scrolly-track {
-    height: auto;
+  /* Variante oscura */
+  .servicio--oscuro .servicio-texto h2 {
+    color: #fff;
   }
-  .scrolly-pin {
-    position: static;
-    padding: 64px 0;
+  .servicio--oscuro .texto {
+    color: rgb(255 255 255 / 0.72);
+  }
+  .servicio--oscuro .enlace {
+    color: #fff;
+  }
+  .servicio--oscuro .enlace:hover {
+    color: var(--ember);
   }
 
-  .scrolly-imgs {
+  /* =========================================================
+     GALERÍAS
+     ========================================================= */
+  .galeria {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 24px;
-    margin-top: 44px;
+    gap: 20px;
   }
-  .scrolly-img {
+  .media {
     margin: 0;
-    width: 100%;
-    max-width: 380px;
   }
-  .scrolly-img .foto-wrap {
+  .marco {
     position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    margin: 0;
     overflow: hidden;
-    aspect-ratio: 4 / 5;
-    max-height: 42vh;
     border: 1px solid var(--cork);
     border-radius: var(--radius-sm);
     background: var(--white-smoke);
   }
-  .scrolly-img .foto-wrap :global(img) {
-    position: absolute;
-    inset: 0;
+  .marco :global(img) {
     display: block;
     width: 100%;
-    height: 100%;
-    object-fit: contain; /* antes cover — muestra la foto entera, sin recortar */
-    transition: transform 0.4s ease;
+    height: auto;
+    transition: transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
   }
-  .scrolly-img:hover .foto-wrap :global(img) {
-    transform: scale(1.06);
+  .media:hover .marco :global(img) {
+    transform: scale(1.04);
   }
-  .scrolly-img figcaption {
+  .media figcaption {
     font-family: var(--font-mono);
     font-size: 12px;
     letter-spacing: 0.03em;
     color: var(--wood-dark);
-    padding: 10px 2px 0;
+    padding: 12px 2px 0;
   }
 
-  /* Disposición diagonal */
-  .scrolly-imgs .scrolly-img:nth-child(1) {
-    justify-self: start;
-    margin-top: 0;
+  /* --- Fallas: foto grande a la izquierda + dos a la derecha, sin recortar --- */
+  .galeria--bento {
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
   }
-  .scrolly-imgs .scrolly-img:nth-child(2) {
-    justify-self: center;
-    margin-top: 70px;
-  }
-  .scrolly-imgs .scrolly-img:nth-child(3) {
-    justify-self: end;
-    margin-top: 140px;
+  .galeria--bento .media:nth-child(1) {
+    grid-row: 1 / span 2;
   }
 
-  .scrolly-img--video {
-    cursor: pointer;
+  /* --- Ninots e ilustraciones: baraja de cartas que rota sola ---
+     Cada carta tiene una posición (--pos): 0 = delante, 1, 2... = detrás.
+     El script la actualiza y el CSS se encarga de la animación. */
+  .galeria--baraja {
+    position: relative;
+    display: block;
+    width: min(calc(100% - 72px), 500px);
+    aspect-ratio: 4 / 5.3; /* tamaño de las cartas: cámbialo aquí */
+    margin: 56px 0 28px;
   }
-  .play-badge {
+  .galeria--baraja .media {
+    --pos: 0;
     position: absolute;
     inset: 0;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(20, 14, 10, 0.45);
-    color: var(--white-smoke);
-    font-family: var(--font-mono);
-    font-size: 13px;
-    letter-spacing: 0.05em;
-    opacity: 0;
-    transition: opacity 0.25s ease;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+    background: var(--white-smoke);
+    border: 1px solid var(--cork);
+    border-radius: var(--radius-sm);
+    box-shadow:
+      0 22px 44px rgb(27 19 13 / 0.2),
+      0 2px 6px rgb(27 19 13 / 0.12);
+    z-index: calc(20 - var(--pos));
+    transform-origin: 20% 100%;
+    transform: translate(calc(var(--pos) * 22px), calc(var(--pos) * -18px))
+      rotate(calc(var(--pos) * 2.4deg)) scale(calc(1 - var(--pos) * 0.045));
+    opacity: clamp(0, calc(4 - var(--pos)), 1);
+    transition:
+      transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+      opacity 0.6s ease;
+    cursor: pointer;
   }
-  .scrolly-img--video:hover .play-badge {
+  .galeria--baraja .marco {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    border-radius: 0;
+    background: none;
+  }
+  .galeria--baraja .marco :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+  }
+  /* El pie de foto va sobre la imagen, con un degradado para que se lea */
+  .galeria--baraja figcaption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1;
+    padding: 56px 20px 18px;
+    text-align: left;
+    color: #fff;
+    text-shadow: 0 1px 10px rgb(0 0 0 / 0.5);
+    background: linear-gradient(
+      0deg,
+      rgb(27 19 13 / 0.78) 0%,
+      rgb(27 19 13 / 0) 100%
+    );
+    pointer-events: none;
+  }
+  /* La carta de delante sale volando y vuelve al fondo */
+  .galeria--baraja .media.sale {
+    z-index: 30;
+    transform: translate(115%, -8%) rotate(14deg);
+    opacity: 0;
+    pointer-events: none;
+    transition:
+      transform 0.7s cubic-bezier(0.5, 0, 0.8, 0.4),
+      opacity 0.7s ease;
+  }
+  .galeria--baraja .media.sin-trans {
+    transition: none !important;
+  }
+  /* Las fotos de fallas son más anchas: carta más cuadrada y algo mayor */
+  #fallas .galeria--baraja {
+    width: min(calc(100% - 72px), 560px);
+    aspect-ratio: 4 / 4.3;
+  }
+
+  .baraja-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .baraja-dots {
+    display: flex;
+    gap: 8px;
+  }
+  .baraja-dots span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--cork);
+    opacity: 0.45;
+    transition:
+      width 0.3s ease,
+      background 0.3s ease,
+      opacity 0.3s ease;
+  }
+  .baraja-dots span.on {
+    width: 26px;
+    border-radius: 999px;
+    background: var(--ember);
     opacity: 1;
   }
-
-  @keyframes reveal-batido {
-    from {
-      opacity: 0;
-      transform: translateY(28px) scale(0.94);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
+  .baraja-next {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--cork);
+    background: transparent;
+    color: var(--wood-dark);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+  .baraja-next:hover {
+    background: var(--ember);
+    border-color: var(--ember);
+    color: #fff;
+  }
+  .baraja-next:focus-visible {
+    outline: 2px solid var(--ember);
+    outline-offset: 3px;
   }
 
-  @supports (animation-timeline: view()) {
-    @media (prefers-reduced-motion: no-preference) {
-      .galeria-item {
-        animation: reveal-batido ease-out both;
-        animation-timeline: view();
-        view-timeline-inset: 20% 0%; /* retrasa el "0%" de entry */
-        animation-range: entry 0% cover 30%;
-      }
-
-      .galeria-item:nth-child(3n + 2) {
-        animation-range: entry 8% cover 38%;
-      }
-      .galeria-item:nth-child(3n) {
-        animation-range: entry 16% cover 46%;
-      }
-    }
-  }
-
-  @keyframes reveal-item-left {
-    from {
-      opacity: 0;
-      transform: translate(-36px, 50px) rotate(-3deg) scale(0.92);
-    }
-    to {
-      opacity: 1;
-      transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-  }
-  @keyframes reveal-item-center {
-    from {
-      opacity: 0;
-      transform: translateY(60px) scale(0.9);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-  @keyframes reveal-item-right {
-    from {
-      opacity: 0;
-      transform: translate(36px, 50px) rotate(3deg) scale(0.92);
-    }
-    to {
-      opacity: 1;
-      transform: translate(0, 0) rotate(0deg) scale(1);
-    }
-  }
-
-  @supports (animation-timeline: scroll()) and (animation-range: 0% 100%) {
-    @media (prefers-reduced-motion: no-preference) {
-      @media (min-width: 901px) {
-        .serv-hero {
-          min-height: 100svh;
-        }
-      }
-
-      .scrolly-track {
-        height: 480vh;
-      }
-      .scrolly-pin {
-        position: sticky;
-        top: 0;
-        height: 100vh;
-        height: 100dvh;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        overflow: hidden;
-        padding: 0;
-      }
-
-      .scrolly-track--fallas {
-        view-timeline-name: --reveal-fallas;
-        view-timeline-axis: block;
-        margin-bottom: 6vh;
-      }
-      .scrolly-track--ninots {
-        view-timeline-name: --reveal-ninots;
-        view-timeline-axis: block;
-      }
-      .scrolly-track--ilustraciones {
-        view-timeline-name: --reveal-ilustraciones;
-        view-timeline-axis: block;
-      }
-
-      .scrolly-track--fallas .scrolly-img,
-      .scrolly-track--ninots .scrolly-img,
-      .scrolly-track--ilustraciones .scrolly-img {
-        animation-timing-function: linear(
-          0,
-          0.412 15.7%,
-          0.652 29.9%,
-          0.802 44.7%,
-          0.9 60.4%,
-          0.968 82%,
-          1
-        );
-        animation-fill-mode: both;
-      }
-      .scrolly-track--fallas .scrolly-img {
-        animation-timeline: --reveal-fallas;
-      }
-      .scrolly-track--ninots .scrolly-img {
-        animation-timeline: --reveal-ninots;
-      }
-      .scrolly-track--ilustraciones .scrolly-img {
-        animation-timeline: --reveal-ilustraciones;
-      }
-
-      .scrolly-imgs .scrolly-img:nth-child(1) {
-        animation-name: reveal-item-left;
-        animation-range: cover 15% cover 42%; /* antes 8% - 45% */
-      }
-      .scrolly-imgs .scrolly-img:nth-child(2) {
-        animation-name: reveal-item-center;
-        animation-range: cover 42% cover 68%; /* antes 38% - 75% */
-      }
-      .scrolly-imgs .scrolly-img:nth-child(3) {
-        animation-name: reveal-item-right;
-        animation-range: cover 68% cover 88%; /* antes 68% - 100% */
-      }
-    }
-  }
-
-  .serv-batidos {
-    background: var(--wood-dark);
-  }
-  .titulo-claro {
-    color: var(--white-smoke);
-    font-size: clamp(26px, 3.4vw, 36px);
-    margin: 10px 0 14px;
-  }
-  .texto-claro {
-    color: var(--cork);
-  }
-  .eyebrow-light {
-    color: var(--ember-light);
-  }
-  .precio-nota-claro {
-    color: var(--ember-light);
+  /* --- Batidos: figuras flotando sobre fondo oscuro --- */
+  .galeria--float {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px 24px;
   }
   .galeria-label {
     font-family: var(--font-mono);
     font-size: 12px;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--ember-light);
-    margin-bottom: 20px;
+    color: var(--ember);
+    margin: 0 0 24px;
   }
-  .galeria-grid {
+  .galeria--float .marco {
+    aspect-ratio: 1;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
-    align-items: end;
+    place-items: center;
+    overflow: visible;
+    border: 0;
+    background: radial-gradient(
+      closest-side,
+      rgb(255 255 255 / 0.09),
+      transparent 78%
+    );
   }
-  .galeria-item {
-    margin: 0;
-    text-align: center;
-  }
-  .galeria-item .galeria-foto {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding: 0 12px;
-  }
-  .galeria-item :global(img) {
-    display: block;
-    width: 100%;
-    height: auto;
-    max-height: 340px;
+  .galeria--float .marco :global(img) {
+    width: 84%;
+    height: 84%;
     object-fit: contain;
+    filter: drop-shadow(0 18px 22px rgb(0 0 0 / 0.4));
     transition:
-      transform 0.3s ease,
-      filter 0.3s ease;
+      transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1),
+      filter 0.5s ease;
   }
-  .galeria-item:hover :global(img) {
-    transform: translateY(-8px) scale(1.04);
-    filter: drop-shadow(0 16px 20px rgba(0, 0, 0, 0.35));
+  .galeria--float .media:hover .marco :global(img) {
+    transform: translateY(-10px) scale(1.04);
+    filter: drop-shadow(0 28px 28px rgb(0 0 0 / 0.5));
   }
-  .galeria-item figcaption {
-    letter-spacing: 0.04em;
-    color: var(--cork);
-    padding: 14px 8px 0;
-    font-size: 14px;
+  .galeria--float figcaption {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: 0.06em;
+    color: rgb(255 255 255 / 0.7);
     transition: color 0.3s ease;
   }
-  .galeria-item:hover figcaption {
-    color: var(--ember-light);
+  .galeria--float .media:hover figcaption {
+    color: var(--ember);
   }
 
-  .serv-process {
-    background: var(--paper);
+  /* Carta con vídeo: al pasar el ratón se funde la foto con el vídeo */
+  .hover-video {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+  .marco-video.reproduciendo .hover-video {
+    opacity: 1;
+  }
+  .marco-video.reproduciendo .play {
+    opacity: 0;
+  }
+  /* El zoom de hover de la foto se anula para que no "salte" al aparecer el vídeo */
+  .marco-video :global(img) {
+    transform: none !important;
+  }
+  .play {
+    position: absolute;
+    z-index: 2;
+    top: 14px;
+    right: 14px;
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: rgb(var(--oscuro-rgb, 27 19 13) / 0.82);
+    backdrop-filter: blur(6px);
+    color: #fff;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.05em;
+    transition:
+      background 0.2s ease,
+      opacity 0.3s ease;
+  }
+
+  /* Aparición suave al hacer scroll (solo si el navegador lo soporta) */
+  @keyframes aparece {
+    from {
+      opacity: 0;
+      transform: translateY(40px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    @supports (animation-timeline: view()) {
+      .galeria:not(.galeria--baraja) .media {
+        animation: aparece linear both;
+        animation-timeline: view();
+        animation-range: entry 5% entry 55%;
+      }
+    }
+  }
+
+  /* =========================================================
+     PROCESO
+     ========================================================= */
+  .proceso {
+    background: var(--paper-dark);
   }
   .proc-title {
+    font-size: clamp(28px, 3.6vw, 44px);
+    line-height: 1.1;
+    letter-spacing: -0.02em;
     color: var(--wood-dark);
-    font-size: clamp(24px, 3vw, 32px);
-    margin: 10px 0 40px;
-    max-width: 24ch;
+    margin: 10px 0 56px;
+    max-width: 22ch;
   }
   .steps {
     list-style: none;
@@ -625,149 +914,100 @@ const ilustraciones = ilustracionesData.map((i) => ({
     padding: 0;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 26px;
+    gap: 32px;
   }
   .step {
-    border-top: 2px solid var(--ember);
-    padding-top: 16px;
+    position: relative;
+    border-top: 1px solid var(--cork);
+    padding-top: 26px;
+  }
+  .step::before {
+    content: "";
+    position: absolute;
+    top: -1px;
+    left: 0;
+    width: 48px;
+    height: 3px;
+    background: var(--ember);
   }
   .step-n {
     display: block;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--wood-dark);
-    margin-bottom: 10px;
+    font-family: var(--font-display);
+    font-size: 44px;
+    line-height: 1;
+    color: var(--ember);
+    margin-bottom: 16px;
   }
   .step h3 {
+    font-size: 20px;
     color: var(--wood-dark);
-    font-size: 19px;
-    margin-bottom: 8px;
+    margin: 0 0 8px;
   }
   .step p {
-    color: var(--cork);
-    font-size: 14px;
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--wood-dark);
+    opacity: 0.85;
   }
 
-  .cta-simple {
-    background: var(--paper);
+  /* =========================================================
+     CTA
+     ========================================================= */
+  .cta {
+    background: var(--oscuro);
+    color: var(--paper);
     text-align: center;
   }
-  .cta-simple-inner h2 {
-    font-size: clamp(24px, 3vw, 30px);
-    margin-bottom: 12px;
+  .cta-inner h2 {
+    font-size: clamp(30px, 5vw, 60px);
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    color: #fff;
+    max-width: 18ch;
+    margin: 0 auto 16px;
+    text-wrap: balance;
   }
-  .cta-simple-inner p {
-    color: var(--wood-dark);
-    margin-bottom: 26px;
-  }
-
-  .video-modal {
-    border: none;
-    border-radius: var(--radius-sm);
-    padding: 0;
-    width: min(900px, 92vw);
-    background: var(--wood-dark);
-  }
-  .video-modal::backdrop {
-    background: rgba(0, 0, 0, 0.7);
-  }
-  .video-modal-body {
-    aspect-ratio: 16 / 9;
-  }
-  .video-modal-body :global(video),
-  .video-modal-body :global(iframe) {
-    width: 100%;
-    height: 100%;
-    border: none;
-    display: block;
-  }
-  .video-modal-close {
-    position: absolute;
-    top: 10px;
-    right: 12px;
-    background: rgba(0, 0, 0, 0.5);
-    color: var(--white-smoke);
-    border: none;
-    border-radius: 999px;
-    width: 32px;
-    height: 32px;
-    font-size: 16px;
-    cursor: pointer;
-    z-index: 1;
+  .cta-inner p {
+    color: rgb(255 255 255 / 0.75);
+    font-size: 18px;
+    max-width: 52ch;
+    margin: 0 auto 32px;
   }
 
+  /* =========================================================
+     RESPONSIVE
+     ========================================================= */
   @media (max-width: 900px) {
-    .scrolly-imgs,
-    .galeria-grid {
+    .servicio-grid {
+      grid-template-columns: 1fr;
+      gap: 40px;
+    }
+    .servicio-texto {
+      position: static;
+    }
+    .servicio--invertido .servicio-texto {
+      order: 0;
+    }
+
+    .galeria--float {
       grid-template-columns: repeat(2, 1fr);
+      gap: 28px 16px;
     }
-    .scrolly-imgs .scrolly-img:nth-child(1),
-    .scrolly-imgs .scrolly-img:nth-child(2),
-    .scrolly-imgs .scrolly-img:nth-child(3) {
-      justify-self: stretch;
-      margin-top: 0;
-      max-width: none;
-    }
-
-    .scrolly-track {
-      height: auto !important;
-    }
-    .scrolly-pin {
-      position: static !important;
-      height: auto !important;
-      display: block !important;
-      overflow: visible !important;
-      padding: 40px 0;
-      will-change: transform;
-    }
-
-    .scrolly-imgs .scrolly-img {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-    }
-  }
-  @media (max-width: 760px) {
     .steps {
       grid-template-columns: 1fr 1fr;
     }
   }
-  @media (max-width: 480px) {
-    .steps,
-    .scrolly-imgs,
-    .galeria-grid {
+
+  @media (max-width: 520px) {
+    .galeria--bento {
+      grid-template-columns: 1fr;
+    }
+    .galeria--bento .media:nth-child(1) {
+      grid-row: auto;
+    }
+    .steps {
       grid-template-columns: 1fr;
     }
   }
 </style>
-
-<script>
-  const modal = document.getElementById("video-modal") as HTMLDialogElement;
-  const body = modal.querySelector(".video-modal-body")!;
-  const closeBtn = modal.querySelector(".video-modal-close")!;
-
-  function openVideo(src: string) {
-    const isYoutube = src.includes("youtube.com") || src.includes("youtu.be");
-    body.innerHTML = isYoutube
-      ? `<iframe src="${src}" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
-      : `<video src="${src}" controls autoplay playsinline></video>`;
-    modal.showModal();
-  }
-
-  function closeVideo() {
-    modal.close();
-    body.innerHTML = "";
-  }
-
-  document.querySelectorAll(".scrolly-img--video").forEach((item) => {
-    item.addEventListener("click", () => {
-      const src = item.getAttribute("data-video");
-      if (src) openVideo(src);
-    });
-  });
-
-  closeBtn.addEventListener("click", closeVideo);
-  modal.addEventListener("click", (e) => {
-    if (e.target === modal) closeVideo();
-  });
-</script>

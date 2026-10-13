@@ -33,7 +33,6 @@ const fallas = Array.from(bySlug.entries())
   }))
   .filter(
     (item): item is { slug: string; entry: NonNullable<typeof item.entry> } => {
-      // Descartar entradas que no tengan versión en ningún idioma válido
       return item.entry !== undefined && item.entry.data !== undefined;
     },
   )

@@ -1,0 +1,199 @@
+---
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Item {
+  img: ImageMetadata;
+  alt: string;
+  titulo?: string;
+  subtitulo?: string;
+  numero?: string;
+  contain?: boolean;
+}
+
+interface Props {
+  items: Item[];
+}
+
+const { items } = Astro.props;
+---
+
+<section class="acordeon" aria-label="Galería">
+  <div class="acordeon-track">
+    {
+      items.map((it, i) => (
+        <article class="acordeon-col">
+          <Image
+            src={it.img}
+            alt={it.alt}
+            widths={[500, 900, 1400]}
+            sizes="(max-width: 700px) 25vw, 40vw"
+            loading="lazy"
+            class:list={[{ "is-contain": it.contain }]}
+          />
+          <div class="acordeon-overlay" aria-hidden="true" />
+
+          <div class="acordeon-caption">
+            <span class="acordeon-num">
+              {it.numero ?? String(i + 1).padStart(2, "0")}
+            </span>
+
+            {it.titulo && <h3>{it.titulo}</h3>}
+
+            {it.subtitulo && <p class="acordeon-desc">{it.subtitulo}</p>}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  .acordeon {
+    width: 100%;
+  }
+
+  .acordeon-track {
+    display: flex;
+    gap: 8px;
+    height: clamp(420px, 65vh, 620px);
+  }
+
+  .acordeon-col {
+    position: relative;
+    flex: 1 1 0;
+    min-width: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    cursor: pointer;
+    isolation: isolate;
+    transition:
+      flex-grow 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      flex-basis 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .acordeon-track:hover .acordeon-col {
+    flex-grow: 0.55;
+  }
+
+  .acordeon-track .acordeon-col:hover {
+    flex-grow: 2.6;
+  }
+
+  /* Imagen */
+  .acordeon-col :global(img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.1s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform;
+  }
+
+  .acordeon-col :global(img.is-contain) {
+    object-fit: contain;
+    padding: 8% 6%;
+  }
+
+  .acordeon-col:hover :global(img) {
+    transform: scale(1.06);
+  }
+
+  /* Overlay gradiente */
+  .acordeon-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgba(0, 0, 0, 0.75) 0%,
+      rgba(0, 0, 0, 0.35) 35%,
+      transparent 75%
+    );
+    opacity: 0.85;
+    transition: opacity 0.5s ease;
+    z-index: 1;
+  }
+
+  .acordeon-col:hover .acordeon-overlay {
+    opacity: 1;
+  }
+
+  /* Caption */
+  .acordeon-caption {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 20px;
+    z-index: 2;
+    color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .acordeon-num {
+    font-family: var(--font-mono, monospace);
+    font-size: 11px;
+    letter-spacing: 0.15em;
+    color: var(--ember, #ff6b35);
+    text-transform: uppercase;
+  }
+
+  .acordeon-caption h3 {
+    font-size: clamp(16px, 1.6vw, 22px);
+    margin: 0;
+    line-height: 1.15;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #fff; /* título blanco puro */
+  }
+
+  /* Descripción */
+  .acordeon-desc {
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.4;
+    color: rgba(255, 255, 255, 0.7); /* blanco al 70% */
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition:
+      opacity 0.4s ease 0.15s,
+      max-height 0.5s ease;
+  }
+
+  .acordeon-col:hover .acordeon-desc {
+    opacity: 1;
+    max-height: 120px;
+  }
+
+  /* Móvil */
+  @media (max-width: 700px) {
+    .acordeon-track {
+      height: 70vh;
+      gap: 4px;
+    }
+    .acordeon-caption {
+      padding: 12px;
+    }
+    .acordeon-caption h3 {
+      font-size: 14px;
+    }
+    .acordeon-desc {
+      font-size: 12px;
+    }
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .acordeon-col,
+    .acordeon-col :global(img),
+    .acordeon-caption,
+    .acordeon-desc {
+      transition-duration: 0.01ms;
+    }
+  }
+</style>

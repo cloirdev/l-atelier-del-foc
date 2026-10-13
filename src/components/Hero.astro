@@ -67,8 +67,6 @@ const t = useTranslations(lang);
       </div>
     </div>
   </div>
-
-  <span class="hero-scroll" aria-hidden="true" data-reveal data-fade></span>
 </section>
 
 <script>
@@ -362,16 +360,6 @@ const t = useTranslations(lang);
     border-color: currentColor;
   }
 
-  .hero-scroll {
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    z-index: 3;
-    width: 1px;
-    height: 44px;
-    background: linear-gradient(var(--ember-light), transparent);
-  }
-
   /* El contenido solo se oculta si hay JS y no se pide reducir movimiento;
      GSAP lo revela al empezar la entrada. */
   @media (prefers-reduced-motion: no-preference) {
@@ -382,26 +370,59 @@ const t = useTranslations(lang);
 
   @media (max-width: 900px) {
     .hero {
+      /* El texto vive al fondo, pero sin pegarse al borde */
       align-items: flex-end;
       min-height: calc(100svh - 64px);
+      padding-bottom: 0;
     }
+
+    /* La imagen pasa a ser un fondo que cubre todo el hero */
     .hero-media {
-      width: 150%;
-      right: -40%;
-      top: 0;
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      right: auto;
       bottom: auto;
-      -webkit-mask-image: linear-gradient(180deg, #000 45%, transparent 100%);
-      mask-image: linear-gradient(180deg, #000 45%, transparent 100%);
+      top: auto;
+      /* Sin máscaras laterales: solo un degradado sutil abajo */
+      -webkit-mask-image: none;
+      mask-image: none;
     }
+
+    .hero-photo {
+      width: 100%;
+      height: 100%;
+      /* En Astro, <Image> renderiza un <img> con width/height; forzamos cover */
+      object-fit: cover;
+      object-position: 70% 30%; /* ajusta a tu foto: dónde queda el foco */
+    }
+
+    /* Oscurecer para legibilidad del texto */
     .hero::after {
-      background: linear-gradient(0deg, var(--soot) 12%, transparent 72%);
+      background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0.25) 0%,
+        transparent 30%,
+        rgba(0, 0, 0, 0.55) 65%,
+        var(--soot) 100%
+      );
     }
+
     .hero-inner {
-      padding-top: 40vh;
-      padding-bottom: 56px;
+      padding-top: 0;
+      padding-bottom: 64px;
     }
-    .hero-scroll {
-      display: none;
+
+    h1 {
+      font-size: clamp(32px, 10vw, 56px);
+      margin: 12px 0 18px;
+    }
+
+    .hero-sub {
+      font-size: 16px;
+      max-width: 100%;
+      margin-bottom: 24px;
     }
   }
 </style>

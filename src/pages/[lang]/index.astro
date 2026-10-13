@@ -1,13 +1,14 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import FallaCard from "../../components/FallaCard.astro";
+import GaleriaAcordeon from "@/components/GaleriaAcordeon.astro";
 import Hero from "../../components/Hero.astro";
 import { Image } from "astro:assets";
 import heroImage from "../../assets/hero-image.webp";
-import imgFalla from "../../assets/servicios/fallas-infantiles/falla-1.jpg";
-import imgNinot from "../../assets/servicios/ninots/ninot-1.png";
-import imgFigura from "../../assets/servicios/batidos/batido-fallero.png";
-import imgLamina from "../../assets/servicios/ilustraciones/poster-2.jpg";
+import imgFalla from "@/assets/fallas/2026/menendez-pelayo/img4.webp";
+import imgNinot from "@/assets/servicios/ninots/ninot-2.png";
+import imgFigura from "@/assets/servicios/batidos/batido-fallero.png";
+import imgLamina from "@/assets/servicios/ilustraciones/poster-2.jpg";
 import { languages } from "../../i18n/ui";
 import { useTranslations } from "../../i18n/utils";
 import { getCollection } from "astro:content";
@@ -24,41 +25,36 @@ const servicios = [
     n: "01",
     id: "fallas",
     img: imgFalla,
-    title: t("home.services.fallas.title"),
-    text: t("home.services.fallas.text"),
+    alt: t("home.services.fallas.title"),
+    titulo: t("home.services.fallas.title"),
+    subtitulo: t("home.services.fallas.text"),
   },
   {
     n: "02",
     id: "ninots",
     img: imgNinot,
-    title: t("home.services.ninots.title"),
-    text: t("home.services.ninots.text"),
+    alt: t("home.services.ninots.title"),
+    titulo: t("home.services.ninots.title"),
+    subtitulo: t("home.services.ninots.text"),
   },
   {
     n: "03",
     id: "figuras-3d",
     img: imgFigura,
-    contain: true, // recorte con fondo transparente: se muestra entero
-    title: t("home.services.figuras3d.title"),
-    text: t("home.services.figuras3d.text"),
+    contain: true,
+    alt: t("home.services.figuras3d.title"),
+    titulo: t("home.services.figuras3d.title"),
+    subtitulo: t("home.services.figuras3d.text"),
   },
   {
     n: "04",
     id: "laminas",
     img: imgLamina,
-    title: t("home.services.laminas.title"),
-    text: t("home.services.laminas.text"),
+    alt: t("home.services.laminas.title"),
+    titulo: t("home.services.laminas.title"),
+    subtitulo: t("home.services.laminas.text"),
   },
 ];
-
-// Acepta tanto nombre.es.md como nombre_es.md
-const recientes = (
-  await getCollection("fallas", ({ filePath }) =>
-    new RegExp(`[._]${lang}\\.md$`).test(filePath ?? ""),
-  )
-)
-  .sort((a, b) => b.data.año - a.data.año)
-  .slice(0, 3);
 
 const title = "L'Atelier del Foc";
 const description = "Taller de arte fallero";
@@ -82,9 +78,9 @@ const description = "Taller de arte fallero";
         <p class="eyebrow">{t("home.about.eyebrow")}</p>
         <h2>{t("home.about.title")}</h2>
         <p>{t("home.about.text")}</p>
-        <a class="btn btn-ghost" href={`/${lang}/sobre-mi/`}
-          >{t("home.about.cta")}</a
-        >
+        <a class="btn btn-ghost" href={`/${lang}/sobre-mi/`}>
+          {t("home.about.cta")}
+        </a>
       </div>
     </div>
   </section>
@@ -93,59 +89,14 @@ const description = "Taller de arte fallero";
     <div class="wrap">
       <div class="section-head">
         <div>
-          <p class="eyebrow eyebrow-light">{t("home.services.eyebrow")}</p>
           <h2>{t("home.services.title")}</h2>
         </div>
-        <a class="btn btn-primary" href={`/${lang}/contacto/`}
-          >{t("home.services.cta")}</a
-        >
+        <a class="btn btn-primary" href={`/${lang}/contacto/`}>
+          {t("home.services.cta")}
+        </a>
       </div>
-      <ul class="services-grid">
-        {
-          servicios.map((s) => (
-            <li>
-              <a class="service" href={`/${lang}/servicios/#${s.id}`}>
-                <div
-                  class:list={["service-media", { "is-contain": s.contain }]}
-                >
-                  <Image
-                    src={s.img}
-                    alt=""
-                    widths={[240, 400, 600]}
-                    sizes="(max-width: 560px) 120px, (max-width: 820px) 280px, 230px"
-                    loading="lazy"
-                  />
-                </div>
-                <div class="service-body">
-                  <span class="service-n">{s.n}</span>
-                  <h3>{s.title}</h3>
-                  <p>{s.text}</p>
-                  <span class="service-more">
-                    {t("home.services.more")} <span aria-hidden="true">→</span>
-                  </span>
-                </div>
-              </a>
-            </li>
-          ))
-        }
-      </ul>
-    </div>
-  </section>
 
-  <section class="section gallery-teaser">
-    <div class="wrap">
-      <div class="section-head">
-        <div>
-          <p class="eyebrow">{t("home.gallery.eyebrow")}</p>
-          <h2>{t("home.gallery.title")}</h2>
-        </div>
-        <a class="btn btn-ghost" href={`/${lang}/galeria/`}
-          >{t("home.gallery.cta")}</a
-        >
-      </div>
-      <div class="pieces-grid">
-        {recientes.map((p) => <FallaCard falla={p.data} />)}
-      </div>
+      <GaleriaAcordeon items={servicios} />
     </div>
   </section>
 
@@ -153,9 +104,9 @@ const description = "Taller de arte fallero";
     <div class="wrap cta-inner">
       <h2>{t("home.cta.title")}</h2>
       <p>{t("home.cta.text")}</p>
-      <a class="btn btn-primary" href={`/${lang}/contacto/`}
-        >{t("home.cta.button")}</a
-      >
+      <a class="btn btn-primary" href={`/${lang}/contacto/`}>
+        {t("home.cta.button")}
+      </a>
     </div>
   </section>
 </Layout>
@@ -219,111 +170,6 @@ const description = "Taller de arte fallero";
     color: var(--white-smoke);
     max-width: 22ch;
   }
-  .services-grid {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px;
-  }
-  .services-grid li {
-    display: flex;
-  }
-  .service {
-    display: flex;
-    width: 100%;
-    overflow: hidden;
-    border-top: 2px solid var(--ember);
-    background: color-mix(in srgb, var(--soot) 35%, transparent);
-    color: inherit;
-    text-decoration: none;
-    transition:
-      background 0.3s ease,
-      transform 0.4s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .service-media {
-    position: relative;
-    flex: 0 0 38%;
-    aspect-ratio: 4 / 5;
-    overflow: hidden;
-    background: radial-gradient(
-      80% 70% at 50% 85%,
-      color-mix(in srgb, var(--ember) 55%, transparent),
-      color-mix(in srgb, var(--soot) 70%, transparent)
-    );
-  }
-  .service-media :global(img) {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transition: transform 0.8s cubic-bezier(0.2, 0.7, 0.2, 1);
-  }
-  .service-media.is-contain :global(img) {
-    object-fit: contain;
-    padding: 8% 6% 0;
-  }
-  .service-body {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    flex: 1;
-    min-width: 0;
-    padding: 24px 24px 22px;
-  }
-  .service-n {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--ember-light);
-  }
-  .service h3 {
-    margin: 0;
-    color: var(--white-smoke);
-    font-size: 26px;
-    line-height: 1.1;
-  }
-  .service p {
-    margin: 0;
-    color: var(--cork);
-    font-size: 14.5px;
-    line-height: 1.5;
-  }
-  .service-more {
-    margin-top: auto;
-    padding-top: 14px;
-    font-family: var(--font-mono);
-    font-size: 12px;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ember-light);
-  }
-  .service-more span {
-    display: inline-block;
-    transition: transform 0.3s ease;
-  }
-  @media (hover: hover) {
-    .service:hover {
-      background: color-mix(in srgb, var(--soot) 65%, transparent);
-      transform: translateY(-4px);
-    }
-    .service:hover .service-media :global(img) {
-      transform: scale(1.06);
-    }
-    .service:hover .service-more span {
-      transform: translateX(5px);
-    }
-  }
-
-  /* Trabajo reciente */
-  .gallery-teaser {
-    background: var(--paper);
-  }
-  .pieces-grid {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 26px;
-  }
 
   /* Cierre */
   .cta-band {
@@ -345,12 +191,11 @@ const description = "Taller de arte fallero";
     margin-bottom: 30px;
     font-size: 16px;
   }
-
-  @media (max-width: 820px) {
-    .services-grid {
-      grid-template-columns: 1fr;
-    }
+  .cta-inner .btn {
+    background-color: var(--wood);
+    border: transparent;
   }
+
   @media (max-width: 900px) {
     .about-grid {
       grid-template-columns: 1fr;
@@ -358,26 +203,6 @@ const description = "Taller de arte fallero";
     .about-media {
       max-width: 360px;
       margin-inline: auto;
-    }
-    .pieces-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-  }
-  @media (max-width: 560px) {
-    .services-grid,
-    .pieces-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-  @media (max-width: 560px) {
-    .service-media {
-      flex-basis: 34%;
-    }
-    .service-body {
-      padding: 16px 16px 16px;
-    }
-    .service h3 {
-      font-size: 21px;
     }
   }
 </style>
@@ -389,8 +214,7 @@ const description = "Taller de arte fallero";
 
   if (!matchMedia("(prefers-reduced-motion: reduce)").matches) {
     for (const [targets, trigger] of [
-      [".services-grid > li", ".services-grid"],
-      [".pieces-grid > *", ".pieces-grid"],
+      [".acordeon-track .acordeon-col", ".acordeon-track"],
     ]) {
       gsap.from(targets, {
         y: 36,

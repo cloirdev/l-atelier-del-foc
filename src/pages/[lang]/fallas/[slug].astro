@@ -1,14 +1,13 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
 import { getCollection, render } from "astro:content";
-import { Image } from "astro:assets";
+import { Image, getImage } from "astro:assets";
 import { languages, defaultLang } from "../../../i18n/ui";
 import { getLangFromUrl, useTranslations } from "../../../i18n/utils";
 
 export async function getStaticPaths() {
   const fallas = await getCollection("fallas");
   const langCodes = Object.keys(languages);
-  const langPattern = langCodes.join("|");
   const langRegex = new RegExp(`^(.*)_(${langCodes.join("|")})$`);
 
   const bySlug = new Map<string, Record<string, (typeof fallas)[number]>>();
@@ -31,250 +30,950 @@ export async function getStaticPaths() {
 }
 
 const { falla } = Astro.props;
-const { falla: nombre, año, lema, seccion, casal, premios, foto } = falla.data;
+const { slug } = Astro.params;
+const {
+  falla: nombre,
+  año,
+  lema,
+  seccion,
+  casal,
+  premios = [],
+  foto,
+  galeria = [],
+} = falla.data;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 
 const { Content } = await render(falla);
+
+const pad = (n: number) => String(n).padStart(2, "0");
+
+// Versiones grandes para el visor (lightbox)
+const galeriaGrande = await Promise.all(
+  galeria.map((img: ImageMetadata) =>
+    getImage({ src: img, width: 1800, format: "webp" }),
+  ),
+);
 ---
 
 <Layout
   title={`${nombre} (${año})`}
   description={lema ?? `Ficha de la falla ${nombre}, ${año}.`}
 >
-  <section class="ficha-hero">
-    <div class="wrap">
+  <!-- ============ HERO ============ -->
+  <section class="hero">
+    {
+      foto && (
+        <div class="hero-media">
+          <Image
+            src={foto}
+            alt={`Falla ${nombre}, ${año}`}
+            widths={[960, 1440, 1920, 2560]}
+            sizes="(max-width: 820px) 100vw, 82vw"
+            loading="eager"
+            fetchpriority="high"
+          />
+        </div>
+      )
+    }
+
+    <div class="wrap hero-inner">
       <a href={`/${lang}/fallas/`} class="volver">
         <span aria-hidden="true">←</span>
         {t("falla.volver")}
       </a>
 
-      <div class="ficha-encabezado">
-        <p class="eyebrow">{año} · {seccion}</p>
-        <h1>{nombre}</h1>
-        {lema && <p class="lede">&ldquo;{lema}&rdquo;</p>}
-      </div>
-
-      {
-        foto && (
-          <div class="ficha-foto">
-            <Image
-              src={foto}
-              alt={`Falla ${nombre}, ${año}`}
-              widths={[640, 960, 1120]}
-              sizes="(max-width: 820px) 100vw, 780px"
-              loading="eager"
-            />
+      <aside class="ficha" aria-label={t("falla.datos")}>
+        <dl>
+          <div class="dato">
+            <dt>{t("falla.anyo")}</dt>
+            <dd>{año}</dd>
           </div>
-        )
-      }
+          <div class="dato">
+            <dt>{t("falla.seccion")}</dt>
+            <dd>{seccion}</dd>
+          </div>
+          {
+            casal && (
+              <div class="dato">
+                <dt>{t("falla.casal")}</dt>
+                <dd>{casal}</dd>
+              </div>
+            )
+          }
+          {
+            premios.length > 0 && (
+              <div class="dato">
+                <dt>{t("falla.premios")}</dt>
+                <dd>
+                  <ul class="lista-premios">
+                    {premios.map((p: string) => (
+                      <li class="tag">{p}</li>
+                    ))}
+                  </ul>
+                </dd>
+              </div>
+            )
+          }
+        </dl>
+      </aside>
 
-      <dl class="ficha-datos">
-        {
-          casal && (
-            <div class="dato">
-              <dt>{t("falla.casal")}</dt>
-              <dd>{casal}</dd>
-            </div>
-          )
-        }
-        <div class="dato">
-          <dt>{t("falla.seccion")}</dt>
-          <dd>{seccion}</dd>
+      <header class="titulo">
+        <p class="eyebrow-hero">{año} · {seccion}</p>
+        <h1 style={`view-transition-name: falla-${slug}`}>{nombre}</h1>
+        {lema && <p class="lema">&ldquo;{lema}&rdquo;</p>}
+      </header>
+    </div>
+  </section>
+
+  <!-- ============ DESCRIPCIÓN ============ -->
+  <section class="section descripcion">
+    <div class="wrap">
+      <div class="prose">
+        <Content />
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ GALERÍA ============ -->
+  {
+    galeria.length > 0 && (
+      <section class="galeria-sec" aria-label={t("falla.galeria")}>
+        <div class="wrap galeria-cab">
+          <h2>{t("falla.galeria")}</h2>
+          <div class="galeria-ctrl">
+            <span class="contador" aria-live="polite">
+              <b data-actual>01</b>
+              <span class="sep">/</span>
+              {pad(galeria.length)}
+            </span>
+            <button type="button" class="ctrl" data-prev aria-label="←">
+              ←
+            </button>
+            <button type="button" class="ctrl" data-next aria-label="→">
+              →
+            </button>
+          </div>
         </div>
-        {
-          premios.length > 0 && (
-            <div class="dato dato-premios">
-              <dt>{t("falla.premios")}</dt>
-              <dd>
-                <ul class="lista-premios">
-                  {premios.map((p: string) => (
-                    <li class="tag">{p}</li>
-                  ))}
-                </ul>
-              </dd>
-            </div>
-          )
-        }
-      </dl>
-    </div>
-  </section>
 
-  <section class="section ficha-body">
-    <div class="wrap prose">
-      <Content />
-    </div>
-  </section>
+        <ul class="carrusel">
+          {galeria.map((img: ImageMetadata, i: number) => (
+            <li>
+              <button
+                type="button"
+                class="slide"
+                data-full={galeriaGrande[i].src}
+                data-alt={`${nombre}, ${año} (${i + 1}/${galeria.length})`}
+                aria-label={`${t("falla.ampliar")} ${i + 1}`}
+              >
+                <Image
+                  src={img}
+                  alt={`${nombre}, ${año} (${i + 1}/${galeria.length})`}
+                  widths={[640, 960, 1280, 1600]}
+                  sizes="(max-width: 640px) 90vw, 900px"
+                  loading="lazy"
+                />
+                <span class="slide-num">{pad(i + 1)}</span>
+                <span class="slide-zoom" aria-hidden="true">
+                  ↗
+                </span>
+              </button>
+            </li>
+          ))}
+        </ul>
+
+        <div class="wrap">
+          <div class="progreso" aria-hidden="true">
+            <span />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ============ VISOR ============ -->
+  <dialog class="visor" aria-label={t("falla.galeria")}>
+    <button
+      type="button"
+      class="ctrl visor-cerrar"
+      aria-label={t("falla.cerrar")}
+    >
+      ×
+    </button>
+    <button type="button" class="ctrl visor-nav prev" aria-label="←">←</button>
+    <img class="visor-img" alt="" />
+    <button type="button" class="ctrl visor-nav next" aria-label="→">→</button>
+    <p class="visor-pie"></p>
+  </dialog>
 </Layout>
 
+<script>
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  /* ---------- Carrusel ---------- */
+  const scroller = document.querySelector<HTMLElement>(".carrusel");
+
+  if (scroller) {
+    const slides = Array.from(scroller.children) as HTMLElement[];
+    const actual = document.querySelector<HTMLElement>("[data-actual]");
+    const prev = document.querySelector<HTMLButtonElement>("[data-prev]");
+    const next = document.querySelector<HTMLButtonElement>("[data-next]");
+    const barra = document.querySelector<HTMLElement>(".progreso span");
+    let idx = 0;
+
+    const padLeft = () => parseFloat(getComputedStyle(scroller).paddingLeft);
+
+    const calcular = () => {
+      const base = scroller.getBoundingClientRect().left + padLeft();
+      let mejor = 0;
+      let dist = Infinity;
+      slides.forEach((s, i) => {
+        const d = Math.abs(s.getBoundingClientRect().left - base);
+        if (d < dist) {
+          dist = d;
+          mejor = i;
+        }
+      });
+      return mejor;
+    };
+
+    // Espacio final: permite que TODAS las fotos (también las últimas)
+    // puedan alinearse al inicio, así el contador no se salta ninguna.
+    const ajustarFinal = () => {
+      const ultima = slides[slides.length - 1];
+      const cs = getComputedStyle(scroller);
+      const gap = parseFloat(cs.columnGap) || 0;
+      const padRight = parseFloat(cs.paddingRight) || 0;
+      const hueco = Math.max(
+        0,
+        scroller.clientWidth - padLeft() - padRight - ultima.offsetWidth - gap,
+      );
+      scroller.style.setProperty("--fin", `${hueco}px`);
+      actualizar();
+    };
+
+    const actualizar = () => {
+      idx = calcular();
+      if (actual) actual.textContent = pad(idx + 1);
+      const alFinal =
+        scroller.scrollLeft + scroller.clientWidth >= scroller.scrollWidth - 4;
+      if (prev) prev.disabled = scroller.scrollLeft <= 4;
+      if (next) next.disabled = alFinal;
+      if (barra) barra.style.transform = `scaleX(${(idx + 1) / slides.length})`;
+    };
+
+    // Posición de scroll en la que cada slide queda alineada al inicio
+    const destino = (s: HTMLElement) => s.offsetLeft - padLeft();
+
+    // Navega según la posición real de scroll (no según el contador), para
+    // que al final del recorrido, cuando las últimas fotos ya no pueden
+    // alinearse al inicio, el botón anterior siga avanzando hacia atrás.
+    const ir = (dir: 1 | -1) => {
+      const actual = scroller.scrollLeft;
+      let objetivo: HTMLElement | undefined;
+      if (dir === 1) {
+        objetivo = slides.find((s) => destino(s) > actual + 4);
+      } else {
+        objetivo = [...slides].reverse().find((s) => destino(s) < actual - 4);
+      }
+      if (objetivo) {
+        scroller.scrollTo({
+          left: Math.max(0, destino(objetivo)),
+          behavior: "smooth",
+        });
+      }
+    };
+
+    let raf = 0;
+    scroller.addEventListener(
+      "scroll",
+      () => {
+        cancelAnimationFrame(raf);
+        raf = requestAnimationFrame(actualizar);
+      },
+      { passive: true },
+    );
+    // Las fotos cargan en diferido y cambian de ancho: recalculamos
+    const ro = new ResizeObserver(ajustarFinal);
+    ro.observe(scroller);
+    slides.forEach((s) => ro.observe(s));
+    prev?.addEventListener("click", () => ir(-1));
+    next?.addEventListener("click", () => ir(1));
+    actualizar();
+  }
+
+  /* ---------- Visor ---------- */
+  const items = Array.from(
+    document.querySelectorAll<HTMLButtonElement>(".slide"),
+  );
+  const dialog = document.querySelector<HTMLDialogElement>(".visor");
+
+  if (dialog && items.length) {
+    const img = dialog.querySelector<HTMLImageElement>(".visor-img")!;
+    const pie = dialog.querySelector<HTMLElement>(".visor-pie")!;
+    let actual = 0;
+
+    const mostrar = (i: number) => {
+      actual = (i + items.length) % items.length;
+      const el = items[actual];
+      img.src = el.dataset.full ?? "";
+      img.alt = el.dataset.alt ?? "";
+      pie.textContent = `${pad(actual + 1)} / ${pad(items.length)}`;
+    };
+
+    items.forEach((el, i) =>
+      el.addEventListener("click", () => {
+        mostrar(i);
+        dialog.showModal();
+      }),
+    );
+
+    dialog
+      .querySelector(".visor-cerrar")
+      ?.addEventListener("click", () => dialog.close());
+    dialog
+      .querySelector(".prev")
+      ?.addEventListener("click", () => mostrar(actual - 1));
+    dialog
+      .querySelector(".next")
+      ?.addEventListener("click", () => mostrar(actual + 1));
+
+    dialog.addEventListener("click", (e) => {
+      if (e.target === dialog) dialog.close();
+    });
+    dialog.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowLeft") mostrar(actual - 1);
+      if (e.key === "ArrowRight") mostrar(actual + 1);
+    });
+  }
+</script>
+
+<!-- View Transitions nativas: el título viaja desde la tarjeta del listado.
+     Debe estar también en la página de origen (FallaCard la incluye). -->
+<style is:global>
+  @view-transition {
+    navigation: auto;
+  }
+  h1[style*="view-transition-name"] {
+    view-transition-class: falla-title;
+  }
+  ::view-transition-group(*.falla-title) {
+    animation-duration: 0.65s;
+    animation-timing-function: cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    @view-transition {
+      navigation: none;
+    }
+  }
+</style>
+
 <style>
-  .ficha-hero {
-    background: var(--paper);
-    padding: 64px 0 48px;
+  /* Paleta oscura compartida por hero, galería y visor.
+     Cámbiala aquí si quieres otro tono. */
+  .hero,
+  .galeria-sec,
+  .visor {
+    --hero-rgb: 27 19 13;
+    --hero: rgb(var(--hero-rgb));
   }
 
-  .ficha-hero .wrap {
-    max-width: 780px;
+  .wrap {
+    max-width: 1240px;
   }
 
-  /* Volver */
+  /* =========================================================
+     HERO
+     ========================================================= */
+  .hero {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    background: var(--hero);
+    color: var(--paper);
+    min-height: clamp(580px, 90svh, 940px);
+    display: flex;
+  }
+
+  /* Imagen a la derecha, fundida con el panel por un gradiente */
+  /* El contenedor se ajusta al tamaño real de la foto (sin recortarla), así
+     la falla se ve entera. El degradado se aplica sobre la propia foto. */
+  .hero-media {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    width: 60vw; /* ancho de la foto: cámbialo aquí */
+    z-index: -1;
+    overflow: hidden; /* evita que el zoom de entrada se salga por la izquierda */
+  }
+  .hero-media :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* qué parte de la foto se prioriza al recortar: "horizontal vertical" */
+    object-position: center 30%;
+  }
+  .hero-media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      /* fusión lateral con la columna de datos */
+      linear-gradient(
+        90deg,
+        var(--hero) 0%,
+        rgb(var(--hero-rgb) / 0.88) 20%,
+        rgb(var(--hero-rgb) / 0.35) 45%,
+        rgb(var(--hero-rgb) / 0) 70%
+      ),
+      /* viñeta inferior para que el título se lea */
+      linear-gradient(
+          0deg,
+          rgb(var(--hero-rgb) / 0.92) 0%,
+          rgb(var(--hero-rgb) / 0.55) 22%,
+          rgb(var(--hero-rgb) / 0) 55%
+        ),
+      /* viñeta superior suave */
+      linear-gradient(180deg, rgb(var(--hero-rgb) / 0.45) 0%, transparent 25%);
+  }
+
+  .hero-inner {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    display: grid;
+    grid-template-columns: minmax(250px, 330px) 1fr;
+    grid-template-rows: auto 1fr auto;
+    column-gap: 56px;
+    padding-top: 36px;
+    padding-bottom: 56px;
+  }
+
   .volver {
+    grid-column: 1 / -1;
+    justify-self: start;
     display: inline-flex;
     align-items: center;
     gap: 6px;
     font-family: var(--font-mono);
     font-size: 13px;
     letter-spacing: 0.04em;
-    color: var(--wood-dark);
-    margin-bottom: 32px;
+    color: rgb(255 255 255 / 0.75);
     transition:
       color 0.2s ease,
       gap 0.2s ease;
   }
   .volver:hover {
-    color: var(--ember);
-    gap: 9px;
-  }
-  .volver span {
-    transition: transform 0.2s ease;
-  }
-  .volver:hover span {
-    transform: translateX(-2px);
+    color: #fff;
+    gap: 10px;
   }
 
-  /* Encabezado */
-  .ficha-encabezado {
-    margin-bottom: 36px;
+  /* Columna de datos */
+  .ficha {
+    grid-column: 1;
+    grid-row: 2;
+    align-self: start;
+    margin-top: 48px;
+    padding-left: 18px;
+    border-left: 2px solid var(--ember);
   }
-
-  .ficha-encabezado .eyebrow {
-    margin-bottom: 10px;
-    display: block;
-  }
-
-  h1 {
-    font-size: clamp(34px, 4.5vw, 52px);
-    margin-bottom: 14px;
-  }
-
-  .lede {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 500;
-    font-size: 20px;
-    line-height: 1.5;
-    color: var(--wood-dark);
-    max-width: 52ch;
-  }
-
-  /* Foto: marco sobrio, sin esquinas muy redondeadas ni sombras pesadas */
-  .ficha-foto {
-    margin-bottom: 36px;
-    border: 1px solid var(--cork);
-    border-radius: var(--radius-sm);
-    padding: 6px;
-    background: var(--white-smoke);
-  }
-  .ficha-foto :global(img) {
-    display: block;
-    border-radius: 2px;
-    width: 100%;
-    height: auto;
-  }
-
-  /* Ficha de datos: como una etiqueta técnica sobre madera/papel */
-  .ficha-datos {
-    display: grid;
-    gap: 20px 40px;
-    grid-template-columns: repeat(auto-fit, minmax(150px, max-content));
-    padding: 24px 28px;
+  .ficha dl {
     margin: 0;
-    background: var(--paper-dark);
-    border: 1px solid var(--cork);
-    border-radius: var(--radius-sm);
+    display: flex;
+    flex-direction: column;
   }
-
   .dato {
     display: flex;
     flex-direction: column;
     gap: 5px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgb(255 255 255 / 0.16);
   }
-
-  .dato-premios {
-    flex: 1 1 100%;
-    grid-column: 1 / -1;
+  .dato:first-child {
+    padding-top: 0;
   }
-
-  .ficha-datos dt {
+  .dato:last-child {
+    border-bottom: 0;
+  }
+  .ficha dt {
     font-family: var(--font-mono);
     font-size: 11px;
-    letter-spacing: 0.1em;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--wood-dark);
+    color: rgb(255 255 255 / 0.6);
   }
-
-  .ficha-datos dd {
+  .ficha dd {
     margin: 0;
-    font-size: 16px;
+    font-size: 18px;
     font-weight: 500;
+    line-height: 1.35;
+    color: #fff;
   }
 
   .lista-premios {
     list-style: none;
-    margin: 2px 0 0;
+    margin: 4px 0 0;
     padding: 0;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
   }
-
-  /* Reutiliza .tag pero en el tono ember, para distinguir premios de secciones */
   .lista-premios li.tag {
     border-color: var(--ember);
-    color: var(--wood-dark);
-    background: var(--paper);
+    color: #fff;
+    background: rgb(255 255 255 / 0.07);
+    backdrop-filter: blur(6px);
     font-size: 12.5px;
   }
 
-  /* Cuerpo */
-  .ficha-body {
-    background: var(--paper-dark);
+  /* Título gigante, superpuesto a la imagen */
+  .titulo {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 40px;
+  }
+  .eyebrow-hero {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ember);
+    margin: 0 0 14px;
+  }
+  .titulo h1 {
+    font-size: clamp(46px, 8.2vw, 124px);
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    color: #fff;
+    max-width: 15ch;
+    margin: 0 0 20px;
+    text-wrap: balance;
+    overflow-wrap: anywhere;
+    text-shadow: 0 2px 40px rgb(var(--hero-rgb) / 0.5);
+  }
+  .lema {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: clamp(18px, 2vw, 26px);
+    line-height: 1.4;
+    color: rgb(255 255 255 / 0.85);
+    margin: 0;
+    max-width: 40ch;
   }
 
+  /* Entrada suave */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-media :global(img) {
+      animation: zoom-in 2.2s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .ficha,
+    .titulo > :not(h1) {
+      animation: subir 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+    }
+    .ficha {
+      animation-delay: 0.25s;
+    }
+    .titulo > :nth-child(1) {
+      animation-delay: 0.1s;
+    }
+    .titulo > :nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    .titulo > :nth-child(3) {
+      animation-delay: 0.35s;
+    }
+  }
+  @keyframes zoom-in {
+    from {
+      transform: scale(1.08);
+    }
+    to {
+      transform: scale(1);
+    }
+  }
+  @keyframes subir {
+    from {
+      opacity: 0;
+      transform: translateY(22px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* =========================================================
+     DESCRIPCIÓN
+     ========================================================= */
+  .descripcion {
+    background: var(--paper);
+  }
   .prose {
-    max-width: 68ch;
-    font-size: 17px;
+    max-width: 70ch;
+    font-size: 18px;
     line-height: 1.75;
+    padding-top: 28px;
+    position: relative;
   }
-
+  .prose::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 56px;
+    height: 3px;
+    background: var(--ember);
+  }
+  .prose :global(> p:first-child) {
+    font-family: var(--font-display);
+    font-size: clamp(21px, 2.2vw, 26px);
+    line-height: 1.5;
+    color: var(--wood-dark);
+  }
   .prose :global(h2),
   .prose :global(h3) {
     margin-top: 2em;
     margin-bottom: 0.6em;
   }
-
   .prose :global(p) {
     margin-bottom: 1.2em;
   }
-
   .prose :global(ul),
   .prose :global(ol) {
     margin: 0 0 1.2em;
     padding-left: 1.4em;
   }
 
-  @media (max-width: 640px) {
-    .ficha-hero {
-      padding: 44px 0 32px;
+  /* =========================================================
+     GALERÍA (carrusel horizontal con snap)
+     ========================================================= */
+  .galeria-sec {
+    background: var(--hero);
+    color: #fff;
+    padding: 88px 0 72px;
+    overflow: hidden;
+  }
+  .galeria-cab {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: 36px;
+  }
+  .galeria-cab h2 {
+    margin: 0;
+    color: #fff;
+    font-size: clamp(32px, 4.5vw, 56px);
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .galeria-ctrl {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .contador {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: rgb(255 255 255 / 0.6);
+    margin-right: 10px;
+  }
+  .contador b {
+    color: #fff;
+    font-weight: 500;
+  }
+  .contador .sep {
+    margin: 0 4px;
+    opacity: 0.5;
+  }
+
+  .ctrl {
+    width: 46px;
+    height: 46px;
+    border-radius: 50%;
+    border: 1px solid rgb(255 255 255 / 0.3);
+    background: transparent;
+    color: #fff;
+    font-size: 20px;
+    line-height: 1;
+    cursor: pointer;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      opacity 0.2s ease;
+  }
+  .ctrl:hover:not(:disabled) {
+    background: var(--ember);
+    border-color: var(--ember);
+  }
+  .ctrl:disabled {
+    opacity: 0.3;
+    cursor: default;
+  }
+  .ctrl:focus-visible {
+    outline: 2px solid var(--ember);
+    outline-offset: 3px;
+  }
+
+  .carrusel {
+    --pad: max(24px, calc((100% - 1240px) / 2));
+    list-style: none;
+    margin: 0;
+    padding: 0 var(--pad);
+    position: relative;
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: var(--pad);
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .carrusel::-webkit-scrollbar {
+    display: none;
+  }
+  .carrusel::after {
+    content: "";
+    flex: 0 0 var(--fin, 0px);
+  }
+  .carrusel li {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+
+  .slide {
+    position: relative;
+    display: block;
+    height: clamp(300px, 60vh, 620px);
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+    background: rgb(255 255 255 / 0.05);
+    cursor: zoom-in;
+  }
+  .slide :global(img) {
+    display: block;
+    height: 100%;
+    width: auto;
+    max-width: none;
+    transition:
+      transform 0.9s cubic-bezier(0.2, 0.7, 0.2, 1),
+      filter 0.4s ease;
+  }
+  .slide::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      0deg,
+      rgb(var(--hero-rgb) / 0.55) 0%,
+      transparent 40%
+    );
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .slide:hover :global(img) {
+    transform: scale(1.045);
+  }
+  .slide:hover::after {
+    opacity: 1;
+  }
+  .slide:focus-visible {
+    outline: 2px solid var(--ember);
+    outline-offset: 3px;
+  }
+
+  .slide-num,
+  .slide-zoom {
+    position: absolute;
+    z-index: 1;
+    font-family: var(--font-mono);
+    color: #fff;
+  }
+  .slide-num {
+    top: 16px;
+    left: 18px;
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-shadow: 0 1px 12px rgb(0 0 0 / 0.6);
+  }
+  .slide-zoom {
+    right: 16px;
+    bottom: 16px;
+    width: 40px;
+    height: 40px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.16);
+    backdrop-filter: blur(8px);
+    font-size: 17px;
+    opacity: 0;
+    transform: translateY(6px);
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+  .slide:hover .slide-zoom,
+  .slide:focus-visible .slide-zoom {
+    opacity: 1;
+    transform: none;
+  }
+
+  .progreso {
+    margin-top: 36px;
+    height: 2px;
+    background: rgb(255 255 255 / 0.16);
+    overflow: hidden;
+  }
+  .progreso span {
+    display: block;
+    height: 100%;
+    background: var(--ember);
+    transform-origin: left;
+    transform: scaleX(0.25);
+    transition: transform 0.5s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  /* =========================================================
+     VISOR
+     ========================================================= */
+  .visor {
+    border: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    max-width: none;
+    max-height: none;
+    background: rgb(var(--hero-rgb) / 0.95);
+    color: #fff;
+  }
+  .visor[open] {
+    display: grid;
+    place-items: center;
+  }
+  .visor::backdrop {
+    background: rgb(var(--hero-rgb) / 0.95);
+  }
+  .visor-img {
+    max-width: min(92vw, 1500px);
+    max-height: 84vh;
+    object-fit: contain;
+    border-radius: 2px;
+  }
+  .visor-pie {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    margin: 0;
+    text-align: center;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    opacity: 0.75;
+  }
+  .visor-cerrar,
+  .visor-nav {
+    position: absolute;
+  }
+  .visor-cerrar {
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+  }
+  .visor-nav {
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  .visor-nav.prev {
+    left: 20px;
+  }
+  .visor-nav.next {
+    right: 20px;
+  }
+
+  /* =========================================================
+     RESPONSIVE
+     ========================================================= */
+  @media (max-width: 960px) {
+    .hero-inner {
+      grid-template-columns: minmax(220px, 280px) 1fr;
+      column-gap: 32px;
     }
-    .ficha-datos {
+  }
+
+  @media (max-width: 820px) {
+    .hero {
+      min-height: 0;
+    }
+    /* En móvil la foto va arriba a todo el ancho, entera, y se funde hacia abajo */
+    .hero-media {
+      inset: 0 0 auto 0;
+      max-width: none;
+      width: 100%;
+    }
+    .hero-media :global(img) {
+      width: 100%;
+      height: auto;
+      -webkit-mask-image: none;
+      mask-image: none;
+    }
+    .hero-media::after {
+      background:
+        linear-gradient(
+          0deg,
+          var(--hero) 0%,
+          rgb(var(--hero-rgb) / 0.75) 28%,
+          rgb(var(--hero-rgb) / 0) 65%
+        ),
+        linear-gradient(180deg, rgb(var(--hero-rgb) / 0.4) 0%, transparent 25%);
+    }
+    .hero-inner {
       grid-template-columns: 1fr;
-      padding: 20px;
-      gap: 18px;
+      grid-template-rows: auto auto auto;
+      padding-top: 28px;
+      padding-bottom: 44px;
     }
-    .lede {
+    /* Título primero, datos debajo */
+    .titulo {
+      grid-row: 2;
+      margin-top: clamp(150px, 42vw, 300px);
+      margin-bottom: 32px;
+    }
+    .ficha {
+      grid-column: 1;
+      grid-row: 3;
+      margin-top: 0;
+    }
+
+    .galeria-sec {
+      padding: 64px 0 56px;
+    }
+    .galeria-cab {
+      margin-bottom: 24px;
+    }
+    .contador {
+      display: none;
+    }
+    .slide {
+      height: clamp(260px, 52vh, 480px);
+    }
+    .prose {
       font-size: 17px;
+    }
+    .visor-nav.prev {
+      left: 8px;
+    }
+    .visor-nav.next {
+      right: 8px;
     }
   }
 </style>

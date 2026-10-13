@@ -1,4 +1,5 @@
 ---
+import "@fontsource/anton";
 import { getLangFromUrl, useTranslations } from "../i18n/utils";
 import Logo from "../assets/logo.svg";
 
@@ -30,7 +31,7 @@ const year = new Date().getFullYear();
   </div>
   <div class="wrap bottom">
     <p>© {year} L'Atelier del Foc — Dani. Hecho a mano, como todo lo demás.</p>
-    <p>Web creada por <a href="https://www.cloir.dev">Cloir.dev</a></p>
+    <p>Web creada por <a href="https://ottro.studio">OTTRO.STUDIO</a></p>
   </div>
 </footer>
 <style>
@@ -82,6 +83,67 @@ const year = new Date().getFullYear();
     font-family: var(--font-mono);
     font-size: 11.5px;
     color: var(--cork);
+  }
+
+  .bottom p a {
+    font-family: "Anton", sans-serif;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    line-height: 1;
+    text-decoration: none;
+
+    /* Estado en reposo: blanco sólido */
+    color: var(--paper-dark);
+
+    /* Gradiente preparado pero invisible */
+    background-image: linear-gradient(
+      90deg,
+      #ff5b1f 0%,
+      #5eead4 50%,
+      #ff5b1f 100%
+    );
+    background-size: 200% 100%;
+    background-position: 0% 50%;
+
+    /* El texto empieza opaco (color natural) */
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: var(--paper-dark);
+    color: var(--paper-dark);
+
+    /* Transición suave para la entrada y la salida */
+    transition:
+      color 0.5s ease,
+      -webkit-text-fill-color 0.5s ease;
+  }
+
+  .bottom p a:hover {
+    /* Al hacer hover, el texto se vuelve transparente
+     y deja ver el gradiente */
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: shift-gradient 2.5s linear infinite;
+  }
+
+  @keyframes shift-gradient {
+    0% {
+      background-position: 0% 50%;
+    }
+    100% {
+      background-position: 200% 50%;
+    }
+  }
+
+  .bottom p a img {
+    width: 1em;
+    height: 1em;
+    display: block;
+  }
+
+  .wrap bottom {
+    display: flex;
   }
 
   @media (max-width: 680px) {

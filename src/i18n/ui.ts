@@ -24,6 +24,12 @@ export const ui = {
     "falla.casal": "Casal faller",
     "falla.volver": "Tornar a col·leccions",
 
+    "falla.datos": "Dades de la falla",
+    "falla.anyo": "Any",
+    "falla.galeria": "Galeria",
+    "falla.ampliar": "Ampliar la foto",
+    "falla.cerrar": "Tancar",
+
     "footer.rights": "Tots els drets reservats.",
     "footer.contacto.mensaje": "Escriure un missatge",
     "footer.descripcion":
@@ -214,6 +220,12 @@ export const ui = {
     "falla.casal": "Casal faller",
     "falla.volver": "Volver a colecciones",
 
+    "falla.datos": "Datos de la falla",
+    "falla.anyo": "Año",
+    "falla.galeria": "Galería",
+    "falla.ampliar": "Ampliar la foto",
+    "falla.cerrar": "Cerrar",
+
     "footer.rights": "Todos los derechos reservados.",
     "footer.contacto.mensaje": "Escribe un mensaje",
     "footer.descripcion":
@@ -224,7 +236,7 @@ export const ui = {
     "home.hero.h1.l1": "Cada falla nace",
     "home.hero.h1.l2": "del boceto",
     "home.hero.h1.l3": "y muere en el",
-    "home.hero.h1.ember": "foc",
+    "home.hero.h1.ember": " foc",
     "home.hero.sub":
       "Dani diseña y construye fallas, ninots y escultura efímera para comisiones, casals y colecciones particulares. Un año de taller, una noche de fuego.",
     "home.hero.cta.encargar": "Encargar una pieza",
@@ -240,11 +252,11 @@ export const ui = {
     "home.services.ninots.title": "Ninots",
     "home.services.ninots.text":
       "Figuras personalizadas para regalar, indultar o recordar un momento especial.",
-    "home.services.escultura3d.title": "Escultura 3D",
-    "home.services.escultura3d.text":
+    "home.services.figuras3d.title": "Figuras 3D",
+    "home.services.figuras3d.text":
       "Piezas modeladas e impresas en 3D, del boceto digital a la figura acabada y pintada.",
-    "home.services.carteles.title": "Carteles",
-    "home.services.carteles.text":
+    "home.services.laminas.title": "Laminas",
+    "home.services.laminas.text":
       "Ilustración de carteles y portadas para fallas, eventos y celebraciones.",
 
     "home.about.eyebrow": "El artista",
@@ -368,7 +380,7 @@ export const ui = {
 
     "serv.proc.1.label": "Consulta",
     "serv.proc.1.text":
-      "Cuéntale a Dani la idea, la escala y el plazo. Primera valoración sin compromiso.",
+      "Cuéntame tu idea, la escala y el plazo. Primera valoración sin compromiso.",
 
     "serv.proc.2.label": "Boceto",
     "serv.proc.2.text":
@@ -382,7 +394,7 @@ export const ui = {
     "serv.proc.4.text":
       "Montaje en su ubicación final, lista para la falla, el casal o la exposición.",
 
-    "serv.cta.title": "Cuéntale a Dani tu idea",
+    "serv.cta.title": "¿Qué idea tienes en mente?",
     "serv.cta.text":
       "Sin compromiso: una primera conversación para valorar escala, plazo y presupuesto.",
     "serv.cta.button": "Solicitar presupuesto",
